@@ -10,5 +10,11 @@ namespace Image2SVG.Image
         {
             this.image = image;
         }
+
+        public void SaveTo(string filename)
+        {
+            FileStream stream = new(filename, FileMode.Create);
+            image.Encode().SaveTo(stream);
+        }
     }
 }
