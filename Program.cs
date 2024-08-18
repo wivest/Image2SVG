@@ -1,14 +1,16 @@
 ﻿using Image2SVG.Image;
 using SkiaSharp;
 
-if (args.Length == 0)
+if (args.Length < 2)
 {
-    Console.WriteLine("No file specified.");
+    Console.WriteLine("No input AND output file specified.");
     return 1;
 }
 
-string filename = args[0];
-SKImage skImage = SKImage.FromEncodedData(filename);
+string inputFilename = args[0];
+string outputFilename = args[1];
+
+SKImage skImage = SKImage.FromEncodedData(inputFilename);
 if (skImage == null)
 {
     Console.WriteLine("Invalid file.");
