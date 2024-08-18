@@ -18,5 +18,6 @@ if (skImage == null)
 }
 
 var image = new Image(skImage);
+image.SaveTo(outputFilename);
 
 return 0;
