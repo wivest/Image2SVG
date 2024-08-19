@@ -20,7 +20,8 @@ namespace Image2SVG.Image
         public void SaveTo(string filename)
         {
             FileStream stream = new(filename, FileMode.Create);
-            image.Encode().SaveTo(stream);
+            SKImage generatedImage = generated.Snapshot();
+            generatedImage.Encode().SaveTo(stream);
         }
     }
 }
