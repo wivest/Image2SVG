@@ -17,7 +17,7 @@ if (skImage == null)
     return 1;
 }
 
-var image = new Image(skImage);
+var image = new Image(skImage, SKColors.Red);
 image.SaveTo(outputFilename);
 
 return 0;
