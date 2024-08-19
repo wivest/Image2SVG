@@ -20,7 +20,7 @@ namespace Image2SVG.Image
 
         public void Randomize(SKDrawable drawable, int count)
         {
-            Random random = new();
+            var random = new Random();
 
             for (int i = 0; i < count; i++)
             {
@@ -35,7 +35,7 @@ namespace Image2SVG.Image
 
         public void SaveTo(string filename)
         {
-            FileStream stream = new(filename, FileMode.Create);
+            var stream = new FileStream(filename, FileMode.Create);
             SKImage generatedImage = generated.Snapshot();
             generatedImage.Encode().SaveTo(stream);
         }
