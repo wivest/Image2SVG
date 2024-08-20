@@ -18,7 +18,7 @@ namespace Image2SVG.Image
             generated.Canvas.DrawPaint(paint);
         }
 
-        public void Randomize(SKDrawable drawable, int count)
+        public void Randomize(IShape shape, int count)
         {
             var random = new Random();
 
@@ -28,8 +28,9 @@ namespace Image2SVG.Image
                 double yRelative = random.NextDouble();
                 float x = image.Width * (float)xRelative;
                 float y = image.Width * (float)yRelative;
+                shape.RandomizeParameters();
 
-                generated.Canvas.DrawDrawable(drawable, x, y);
+                generated.Canvas.DrawDrawable(shape.Drawable, x, y);
             }
         }
 
