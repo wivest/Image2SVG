@@ -1,4 +1,5 @@
 ﻿using Image2SVG.Image;
+using Image2SVG.Shapes;
 using SkiaSharp;
 
 if (args.Length < 2)
@@ -18,6 +19,7 @@ if (skImage == null)
 }
 
 var image = new Image(skImage, SKColors.Red);
+image.Generate(new Rect(), 100);
 image.SaveTo(outputFilename);
 
 return 0;
