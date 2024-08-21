@@ -7,8 +7,8 @@ if (args.Length < 2)
     return 1;
 }
 
-string inputFilename = args[0];
-string outputFilename = args[1];
+string inputFilename = $"images/{args[0]}";
+string outputFilename = $"images/{args[1]}";
 
 SKImage skImage = SKImage.FromEncodedData(inputFilename);
 if (skImage == null)
