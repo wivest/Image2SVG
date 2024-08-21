@@ -24,13 +24,8 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
-                double xRelative = random.NextDouble();
-                double yRelative = random.NextDouble();
-                float x = image.Width * (float)xRelative;
-                float y = image.Width * (float)yRelative;
                 shape.RandomizeParameters();
-
-                generated.Canvas.DrawDrawable(shape.Drawable, x, y);
+                shape.Draw(generated.Canvas);
             }
         }
 
