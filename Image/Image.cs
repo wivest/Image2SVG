@@ -8,19 +8,19 @@ namespace Image2SVG.Image
         SKImage image;
 
         SKSurface generated;
+        SKPaint backgroundPaint;
 
         public Image(SKImage image, SKColor backgroundColor)
         {
             this.image = image;
 
-            var paint = new SKPaint { Color = backgroundColor };
+            backgroundPaint = new SKPaint { Color = backgroundColor };
             generated = SKSurface.Create(this.image.Info);
-            generated.Canvas.DrawPaint(paint);
         }
 
-        public void Randomize(IShape shape, int count)
+        public void Generate(IShape shape, int count)
         {
-            var random = new Random();
+            generated.Canvas.DrawPaint(backgroundPaint);
 
             for (int i = 0; i < count; i++)
             {
