@@ -24,7 +24,7 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
-                shape.RandomizeParameters();
+                shape.RandomizeParameters(image.Info);
                 shape.Draw(generated.Canvas);
             }
         }

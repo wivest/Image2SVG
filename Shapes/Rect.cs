@@ -16,7 +16,7 @@ namespace Image2SVG.Shapes
             canvas.DrawRect(x, y, width, height, paint);
         }
 
-        public void RandomizeParameters()
+        public void RandomizeParameters(SKImageInfo info)
         {
             var random = new Random();
 
