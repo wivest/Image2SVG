@@ -20,10 +20,10 @@ namespace Image2SVG.Shapes
         {
             var random = new Random();
 
-            x = (float)random.NextDouble();
-            y = (float)random.NextDouble();
-            width = (float)random.NextDouble();
-            height = (float)random.NextDouble();
+            x = (float)random.NextDouble() * info.Width;
+            y = (float)random.NextDouble() * info.Height;
+            width = (float)random.NextDouble() * info.Width;
+            height = (float)random.NextDouble() * info.Height;
 
             var color = new byte[3];
             random.NextBytes(color);
