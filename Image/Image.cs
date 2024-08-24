@@ -29,6 +29,12 @@ namespace Image2SVG.Image
             }
         }
 
+        public int CalculateScore()
+        {
+            var score = 0;
+            return score;
+        }
+
         public void SaveTo(string filename)
         {
             var stream = new FileStream(filename, FileMode.Create);
