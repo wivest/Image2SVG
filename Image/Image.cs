@@ -21,7 +21,8 @@ namespace Image2SVG.Image
             backgroundPaint = new SKPaint { Color = backgroundColor };
         }
 
-        public void Generate(IShape shape, int count, int samples)
+        public void Generate<T>(int count, int samples)
+            where T : IShape, new()
         {
             generated.Canvas.DrawPaint(backgroundPaint);
 
@@ -35,6 +36,8 @@ namespace Image2SVG.Image
                 for (int sample = 0; sample < samples; sample++)
                 {
                     currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
+
+                    var shape = new T { Alpha = 128 };
                     shape.RandomizeParameters(image.Info);
                     shape.Draw(currentGeneratedCopy.Canvas);
 
