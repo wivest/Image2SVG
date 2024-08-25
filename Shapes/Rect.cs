@@ -22,10 +22,15 @@ namespace Image2SVG.Shapes
         {
             var random = new Random();
 
-            x = (float)random.NextDouble() * info.Width;
-            y = (float)random.NextDouble() * info.Height;
-            width = (float)random.NextDouble() * info.Width;
-            height = (float)random.NextDouble() * info.Height;
+            var x1 = (float)random.NextDouble() * info.Width;
+            var y1 = (float)random.NextDouble() * info.Height;
+            var x2 = (float)random.NextDouble() * info.Width;
+            var y2 = (float)random.NextDouble() * info.Height;
+
+            x = Math.Min(x1, x2);
+            y = Math.Min(y1, y2);
+            width = Math.Max(x1, x2) - x;
+            height = Math.Max(y1, y2) - y;
 
             var color = new byte[3];
             random.NextBytes(color);
