@@ -26,12 +26,10 @@ namespace Image2SVG.Image
         {
             generated.Canvas.DrawPaint(backgroundPaint);
 
-            var minScore = int.MaxValue;
-            SKSurface newGenerated = SKSurface.Create(image.Info);
-
             for (int i = 0; i < count; i++)
             {
                 SKSurface currentGeneratedCopy = SKSurface.Create(image.Info);
+                var shapes = new List<Tuple<T, int>>();
 
                 for (int sample = 0; sample < samples; sample++)
                 {
@@ -42,15 +40,12 @@ namespace Image2SVG.Image
                     shape.Draw(currentGeneratedCopy.Canvas);
 
                     var score = CalculateScore(currentGeneratedCopy);
-                    if (score < minScore)
-                    {
-                        minScore = score;
-                        newGenerated = currentGeneratedCopy;
-                    }
+                    shapes.Add(new Tuple<T, int>(shape, score));
                 }
 
-                generated = newGenerated;
-                minScore = int.MaxValue;
+                shapes.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
+
+                shapes[0].Item1.Draw(generated.Canvas);
             }
         }
 
