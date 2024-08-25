@@ -19,7 +19,7 @@ if (skImage == null)
 }
 
 var image = new Image(skImage, SKColors.Red);
-image.Generate(new Rect(), 100);
+image.Generate(new Rect { Alpha = 128 }, 100);
 image.SaveTo(outputFilename);
 
 return 0;

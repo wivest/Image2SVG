@@ -11,6 +11,8 @@ namespace Image2SVG.Shapes
 
         private SKPaint paint = new();
 
+        public byte Alpha { get; set; }
+
         public void Draw(SKCanvas canvas)
         {
             canvas.DrawRect(x, y, width, height, paint);
@@ -28,7 +30,7 @@ namespace Image2SVG.Shapes
             var color = new byte[3];
             random.NextBytes(color);
 
-            paint.Color = new SKColor(color[0], color[1], color[2]);
+            paint.Color = new SKColor(color[0], color[1], color[2], Alpha);
         }
 
         public void TweakParameters(float percentage)
