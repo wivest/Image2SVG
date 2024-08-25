@@ -32,6 +32,15 @@ namespace Image2SVG.Image
         public int CalculateScore()
         {
             var score = 0;
+
+            ReadOnlySpan<byte> originalPixels = image.EncodedData.AsSpan();
+            ReadOnlySpan<byte> generatedPixels = generated.PeekPixels().GetPixelSpan();
+
+            for (int i = 0; i < originalPixels.Length; i++)
+            {
+                score += Math.Abs(originalPixels[i] - generatedPixels[i]);
+            }
+
             return score;
         }
 
