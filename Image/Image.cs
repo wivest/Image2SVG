@@ -21,14 +21,33 @@ namespace Image2SVG.Image
             backgroundPaint = new SKPaint { Color = backgroundColor };
         }
 
-        public void Generate(IShape shape, int count)
+        public void Generate(IShape shape, int count, int samples)
         {
             generated.Canvas.DrawPaint(backgroundPaint);
 
+            var minScore = int.MaxValue;
+            SKSurface newGenerated = SKSurface.Create(image.Info);
+
             for (int i = 0; i < count; i++)
             {
-                shape.RandomizeParameters(image.Info);
-                shape.Draw(generated.Canvas);
+                SKSurface currentGeneratedCopy = SKSurface.Create(image.Info);
+
+                for (int sample = 0; sample < samples; sample++)
+                {
+                    currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
+                    shape.RandomizeParameters(image.Info);
+                    shape.Draw(currentGeneratedCopy.Canvas);
+
+                    var score = CalculateScore(currentGeneratedCopy);
+                    if (score < minScore)
+                    {
+                        minScore = score;
+                        newGenerated = currentGeneratedCopy;
+                    }
+                }
+
+                generated = newGenerated;
+                minScore = int.MaxValue;
             }
         }
 
