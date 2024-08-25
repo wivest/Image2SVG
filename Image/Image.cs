@@ -28,25 +28,32 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
-                SKSurface currentGeneratedCopy = SKSurface.Create(image.Info);
-                var shapes = new List<Tuple<T, int>>();
-
-                for (int sample = 0; sample < samples; sample++)
-                {
-                    currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-
-                    var shape = new T { Alpha = 128 };
-                    shape.RandomizeParameters(image.Info);
-                    shape.Draw(currentGeneratedCopy.Canvas);
-
-                    var score = CalculateScore(currentGeneratedCopy);
-                    shapes.Add(new Tuple<T, int>(shape, score));
-                }
-
-                shapes.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
-
+                List<Tuple<T, int>> shapes = RankShapes<T>(samples);
                 shapes[0].Item1.Draw(generated.Canvas);
             }
+        }
+
+        public List<Tuple<T, int>> RankShapes<T>(int samples)
+            where T : IShape, new()
+        {
+            SKSurface currentGeneratedCopy = SKSurface.Create(image.Info);
+            var shapes = new List<Tuple<T, int>>();
+
+            for (int sample = 0; sample < samples; sample++)
+            {
+                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
+
+                var shape = new T { Alpha = 128 };
+                shape.RandomizeParameters(image.Info);
+                shape.Draw(currentGeneratedCopy.Canvas);
+
+                var score = CalculateScore(currentGeneratedCopy);
+                shapes.Add(new Tuple<T, int>(shape, score));
+            }
+
+            shapes.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
+
+            return shapes;
         }
 
         public int CalculateScore(SKSurface result)
