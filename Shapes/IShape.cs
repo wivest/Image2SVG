@@ -6,5 +6,6 @@ namespace Image2SVG.Shapes
     {
         public void Draw(SKCanvas canvas);
         public void RandomizeParameters(SKImageInfo info);
+        public void TweakParameters(float percentage);
     }
 }

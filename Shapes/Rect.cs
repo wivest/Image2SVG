@@ -30,5 +30,15 @@ namespace Image2SVG.Shapes
 
             paint.Color = new SKColor(color[0], color[1], color[2]);
         }
+
+        public void TweakParameters(float percentage)
+        {
+            var random = new Random();
+
+            x *= 1 + (float)random.NextDouble() * percentage;
+            y *= 1 + (float)random.NextDouble() * percentage;
+            width *= 1 + (float)random.NextDouble() * percentage;
+            height *= 1 + (float)random.NextDouble() * percentage;
+        }
     }
 }
