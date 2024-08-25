@@ -18,7 +18,7 @@ if (skImage == null)
     return 1;
 }
 
-var image = new Image(skImage, SKColors.Red);
+var image = new Image(skImage, SKColors.White);
 image.Generate<Rect>(100, 10);
 image.SaveTo(outputFilename);
 
