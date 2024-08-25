@@ -6,16 +6,19 @@ namespace Image2SVG.Image
     class Image
     {
         SKImage image;
-
+        SKSurface original;
         SKSurface generated;
+
         SKPaint backgroundPaint;
 
         public Image(SKImage image, SKColor backgroundColor)
         {
             this.image = image;
+            original = SKSurface.Create(this.image.Info);
+            original.Canvas.DrawImage(this.image, 0, 0);
+            generated = SKSurface.Create(this.image.Info);
 
             backgroundPaint = new SKPaint { Color = backgroundColor };
-            generated = SKSurface.Create(this.image.Info);
         }
 
         public void Generate(IShape shape, int count)
@@ -29,16 +32,16 @@ namespace Image2SVG.Image
             }
         }
 
-        public int CalculateScore()
+        public int CalculateScore(SKSurface result)
         {
             var score = 0;
 
-            ReadOnlySpan<byte> originalPixels = image.EncodedData.AsSpan();
-            ReadOnlySpan<byte> generatedPixels = generated.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> originalPixels = original.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> resultPixels = result.PeekPixels().GetPixelSpan();
 
             for (int i = 0; i < originalPixels.Length; i++)
             {
-                score += Math.Abs(originalPixels[i] - generatedPixels[i]);
+                score += Math.Abs(originalPixels[i] - resultPixels[i]);
             }
 
             return score;
