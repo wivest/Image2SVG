@@ -1,4 +1,3 @@
-using System.Security.AccessControl;
 using Image2SVG.Shapes;
 using SkiaSharp;
 
