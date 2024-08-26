@@ -29,7 +29,7 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
-                T shape = EvolveShapes<T>(samples, 5, 5);
+                T shape = EvolveShapes<T>(samples, 10, 10);
                 shape.Draw(generated.Canvas);
             }
         }
@@ -43,8 +43,6 @@ namespace Image2SVG.Image
             foreach (T shape in shapes)
             {
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-
-                shape.RandomizeParameters(image.Info);
                 shape.Draw(currentGeneratedCopy.Canvas);
 
                 var score = CalculateScore(currentGeneratedCopy);
@@ -62,7 +60,9 @@ namespace Image2SVG.Image
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                shapes.Add(new T());
+                var shape = new T { Alpha = 128 };
+                shape.RandomizeParameters(image.Info);
+                shapes.Add(shape);
             }
             List<Tuple<T, int>> rank = RankShapes<T>(shapes);
 
@@ -84,7 +84,10 @@ namespace Image2SVG.Image
             {
                 T shape = rank[top].Item1;
                 shapes.Add(shape);
-                for (int i = 0; i < mutations; i++) { }
+                for (int i = 0; i < mutations; i++)
+                {
+                    shapes.Add(shape.Mutate(0.1f));
+                }
             }
 
             return shapes;

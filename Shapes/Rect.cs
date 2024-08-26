@@ -40,14 +40,27 @@ namespace Image2SVG.Shapes
 
         public Rect Mutate(float percentage)
         {
+            var clone = new Rect
+            {
+                x = x,
+                y = y,
+                width = width,
+                height = height,
+                paint = paint,
+                Alpha = Alpha
+            };
             var random = new Random();
 
-            x *= 1 + (float)random.NextDouble() * percentage;
-            y *= 1 + (float)random.NextDouble() * percentage;
-            width *= 1 + (float)random.NextDouble() * percentage;
-            height *= 1 + (float)random.NextDouble() * percentage;
+            clone.x *= 1 + (float)random.NextDouble() * percentage;
+            clone.y *= 1 + (float)random.NextDouble() * percentage;
+            clone.width *= 1 + (float)random.NextDouble() * percentage;
+            clone.height *= 1 + (float)random.NextDouble() * percentage;
+            var r = (byte)(clone.paint.Color.Red * 1 + (float)random.NextDouble() * percentage);
+            var g = (byte)(clone.paint.Color.Green * 1 + (float)random.NextDouble() * percentage);
+            var b = (byte)(clone.paint.Color.Blue * 1 + (float)random.NextDouble() * percentage);
+            clone.paint.Color = new SKColor(r, g, b, Alpha);
 
-            return new Rect();
+            return clone;
         }
     }
 }
