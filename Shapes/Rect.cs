@@ -2,7 +2,7 @@ using SkiaSharp;
 
 namespace Image2SVG.Shapes
 {
-    class Rect : IShape
+    class Rect : IShape<Rect>
     {
         private float x;
         private float y;
@@ -38,7 +38,7 @@ namespace Image2SVG.Shapes
             paint.Color = new SKColor(color[0], color[1], color[2], Alpha);
         }
 
-        public void TweakParameters(float percentage)
+        public Rect Mutate(float percentage)
         {
             var random = new Random();
 
@@ -46,6 +46,8 @@ namespace Image2SVG.Shapes
             y *= 1 + (float)random.NextDouble() * percentage;
             width *= 1 + (float)random.NextDouble() * percentage;
             height *= 1 + (float)random.NextDouble() * percentage;
+
+            return new Rect();
         }
     }
 }

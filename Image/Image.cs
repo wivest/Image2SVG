@@ -23,7 +23,7 @@ namespace Image2SVG.Image
         }
 
         public void Generate<T>(int count, int samples)
-            where T : IShape, new()
+            where T : IShape<T>, new()
         {
             generated.Canvas.DrawPaint(backgroundPaint);
 
@@ -35,7 +35,7 @@ namespace Image2SVG.Image
         }
 
         public List<Tuple<T, int>> RankShapes<T>(List<T> shapes)
-            where T : IShape
+            where T : IShape<T>
         {
             SKSurface currentGeneratedCopy = SKSurface.Create(image.Info);
             var rank = new List<Tuple<T, int>>();
@@ -57,7 +57,7 @@ namespace Image2SVG.Image
         }
 
         public T EvolveShapes<T>(int samples, int mutations, int generations)
-            where T : IShape, new()
+            where T : IShape<T>, new()
         {
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
@@ -76,7 +76,7 @@ namespace Image2SVG.Image
         }
 
         public List<T> MutateShapes<T>(List<Tuple<T, int>> rank, int samples, int mutations)
-            where T : IShape, new()
+            where T : IShape<T>, new()
         {
             var shapes = new List<T>();
 
