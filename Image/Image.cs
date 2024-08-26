@@ -1,3 +1,4 @@
+using System.Security.AccessControl;
 using Image2SVG.Shapes;
 using SkiaSharp;
 
@@ -28,7 +29,7 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
-                T shape = EvolveShapes<T>(samples);
+                T shape = EvolveShapes<T>(samples, 5, 5);
                 shape.Draw(generated.Canvas);
             }
         }
@@ -55,17 +56,38 @@ namespace Image2SVG.Image
             return rank;
         }
 
-        public T EvolveShapes<T>(int samples)
+        public T EvolveShapes<T>(int samples, int mutations, int generations)
             where T : IShape, new()
         {
             var shapes = new List<T>();
-            for (int i = 0; i < samples; i++)
+            for (int i = 0; i < samples * mutations; i++)
             {
                 shapes.Add(new T());
             }
             List<Tuple<T, int>> rank = RankShapes<T>(shapes);
 
+            for (int generation = 1; generation < generations; generation++)
+            {
+                shapes = MutateShapes<T>(rank, samples, mutations);
+                rank = RankShapes<T>(shapes);
+            }
+
             return rank[0].Item1;
+        }
+
+        public List<T> MutateShapes<T>(List<Tuple<T, int>> rank, int samples, int mutations)
+            where T : IShape, new()
+        {
+            var shapes = new List<T>();
+
+            for (int top = 0; top < samples; top++)
+            {
+                T shape = rank[top].Item1;
+                shapes.Add(shape);
+                for (int i = 0; i < mutations; i++) { }
+            }
+
+            return shapes;
         }
 
         public int CalculateScore(SKSurface result)
