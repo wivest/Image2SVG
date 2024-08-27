@@ -12,6 +12,10 @@ namespace Image2SVG.Shapes
         private SKPaint paint = new();
 
         public byte Alpha { get; set; }
+        public SKRect Bounds
+        {
+            get { return new SKRect(x, y, x + width, y + height); }
+        }
 
         public void Draw(SKCanvas canvas)
         {

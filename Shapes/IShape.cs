@@ -5,6 +5,7 @@ namespace Image2SVG.Shapes
     interface IShape<T>
     {
         public byte Alpha { get; set; }
+        public SKRect Bounds { get; }
 
         public void Draw(SKCanvas canvas);
         public void RandomizeParameters(SKImageInfo info);
