@@ -44,7 +44,7 @@ namespace Image2SVG.Image
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
 
-                var score = CalculateScore(currentGeneratedCopy);
+                var score = CalculateScore<T>(currentGeneratedCopy, shape);
                 rank.Add(new Tuple<T, int>(shape, score));
             }
 
@@ -92,16 +92,21 @@ namespace Image2SVG.Image
             return shapes;
         }
 
-        public int CalculateScore(SKSurface result)
+        public int CalculateScore<T>(SKSurface result, IShape<T> shape)
+            where T : IShape<T>
         {
             var score = 0;
 
             ReadOnlySpan<byte> originalPixels = original.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> resultPixels = result.PeekPixels().GetPixelSpan();
 
-            for (int i = 0; i < originalPixels.Length; i++)
+            for (int x = (int)shape.Bounds.Left; x < (int)shape.Bounds.Right; x++)
             {
-                score += Math.Abs(originalPixels[i] - resultPixels[i]);
+                for (int y = (int)shape.Bounds.Top; y < (int)shape.Bounds.Bottom; y++)
+                {
+                    int i = x + y * (int)shape.Bounds.Width;
+                    score += Math.Abs(originalPixels[i] - resultPixels[i]);
+                }
             }
 
             return score;
