@@ -28,8 +28,12 @@ namespace Image2SVG.Image
 
             for (int i = 0; i < count; i++)
             {
+                var stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
                 T shape = EvolveShapes<T>(samples, 10, 10);
                 shape.Draw(generated.Canvas);
+                stopwatch.Stop();
+                Console.WriteLine($"Shape {i + 1}: {stopwatch.Elapsed.Milliseconds} ms");
             }
         }
 
