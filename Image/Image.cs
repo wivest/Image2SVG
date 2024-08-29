@@ -33,7 +33,7 @@ namespace Image2SVG.Image
                 T shape = EvolveShapes<T>(samples, 10, 10);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
-                Console.WriteLine($"Shape {i + 1}: {stopwatch.Elapsed.Milliseconds} ms");
+                Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
         }
 
