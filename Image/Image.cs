@@ -104,14 +104,17 @@ namespace Image2SVG.Image
             ReadOnlySpan<byte> originalPixels = original.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> resultPixels = result.PeekPixels().GetPixelSpan();
 
+            int bytesPerRow = image.Info.RowBytes;
+            int bytesPerPixel = image.Info.BytesPerPixel;
+
             for (int y = (int)shape.Bounds.Top; y < (int)shape.Bounds.Bottom; y++)
             {
-                var offset = y * image.Width;
+                var offset = y * bytesPerRow;
                 for (int x = (int)shape.Bounds.Left; x < (int)shape.Bounds.Right; x++)
                 {
-                    for (int channel = 0; channel < 4; channel++)
+                    for (int channel = 0; channel < bytesPerPixel; channel++)
                     {
-                        int i = (x + offset) * 4 + channel;
+                        int i = offset + x * bytesPerPixel + channel;
                         score += Math.Abs(originalPixels[i] - resultPixels[i]);
                     }
                 }
