@@ -30,7 +30,7 @@ namespace Image2SVG.Image
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                T shape = EvolveShapes<T>(samples, 10, 10);
+                T shape = EvolveShapes<T>(samples, 1, 1);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
@@ -104,12 +104,16 @@ namespace Image2SVG.Image
             ReadOnlySpan<byte> originalPixels = original.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> resultPixels = result.PeekPixels().GetPixelSpan();
 
-            for (int x = (int)shape.Bounds.Left; x < (int)shape.Bounds.Right; x++)
+            for (int y = (int)shape.Bounds.Left; y < (int)shape.Bounds.Right; y++)
             {
-                for (int y = (int)shape.Bounds.Top; y < (int)shape.Bounds.Bottom; y++)
+                var offset = y * (int)shape.Bounds.Width;
+                for (int x = (int)shape.Bounds.Top; x < (int)shape.Bounds.Bottom; x++)
                 {
-                    int i = x + y * (int)shape.Bounds.Width;
-                    score += Math.Abs(originalPixels[i] - resultPixels[i]);
+                    for (int channel = 0; channel < 4; channel++)
+                    {
+                        int i = (x + offset) * 4 + channel;
+                        score += Math.Abs(originalPixels[i] - resultPixels[i]);
+                    }
                 }
             }
 
