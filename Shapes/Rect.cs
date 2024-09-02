@@ -55,10 +55,10 @@ namespace Image2SVG.Shapes
             };
             var random = new Random();
 
-            clone.x *= 1 + (float)random.NextDouble() * percentage;
-            clone.y *= 1 + (float)random.NextDouble() * percentage;
-            clone.width *= 1 + (float)random.NextDouble() * percentage;
-            clone.height *= 1 + (float)random.NextDouble() * percentage;
+            clone.x *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.width *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.height *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
             var r = (byte)(clone.paint.Color.Red * 1 + (float)random.NextDouble() * percentage);
             var g = (byte)(clone.paint.Color.Green * 1 + (float)random.NextDouble() * percentage);
             var b = (byte)(clone.paint.Color.Blue * 1 + (float)random.NextDouble() * percentage);
