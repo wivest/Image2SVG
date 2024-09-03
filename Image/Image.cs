@@ -48,8 +48,8 @@ namespace Image2SVG.Image
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
 
-                var score = CalculateScore<T>(currentGeneratedCopy, shape);
-                rank.Add(new Tuple<T, int>(shape, score));
+                var difference = CalculateScore<T>(currentGeneratedCopy, shape);
+                rank.Add(new Tuple<T, int>(shape, difference));
             }
 
             rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
