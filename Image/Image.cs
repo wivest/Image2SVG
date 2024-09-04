@@ -48,7 +48,7 @@ namespace Image2SVG.Image
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
 
-                var difference = CalculateScore<T>(currentGeneratedCopy, shape);
+                var difference = CalculateDifference<T>(currentGeneratedCopy, shape);
                 rank.Add(new Tuple<T, int>(shape, difference));
             }
 
@@ -96,10 +96,10 @@ namespace Image2SVG.Image
             return shapes;
         }
 
-        public int CalculateScore<T>(SKSurface result, IShape<T> shape)
+        public int CalculateDifference<T>(SKSurface result, IShape<T> shape)
             where T : IShape<T>
         {
-            var score = 0;
+            var difference = 0;
 
             ReadOnlySpan<byte> originalPixels = original.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> resultPixels = result.PeekPixels().GetPixelSpan();
@@ -118,12 +118,12 @@ namespace Image2SVG.Image
                     for (int channel = 0; channel < bytesPerPixel; channel++)
                     {
                         int i = offset + x * bytesPerPixel + channel;
-                        score += Math.Abs(originalPixels[i] - resultPixels[i]);
+                        difference += Math.Abs(originalPixels[i] - resultPixels[i]);
                     }
                 }
             }
 
-            return score;
+            return difference;
         }
 
         public void SaveTo(string filename)
