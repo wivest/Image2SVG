@@ -46,10 +46,10 @@ namespace Image2SVG.Image
             foreach (T shape in shapes)
             {
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-                int currentDifference = CalculateDifference<T>(currentGeneratedCopy, shape);
+                int currentDifference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
 
                 shape.Draw(currentGeneratedCopy.Canvas);
-                int difference = CalculateDifference<T>(currentGeneratedCopy, shape);
+                int difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
                 rank.Add(new Tuple<T, int>(shape, difference - currentDifference));
             }
 
@@ -97,8 +97,7 @@ namespace Image2SVG.Image
             return shapes;
         }
 
-        public int CalculateDifference<T>(SKSurface result, IShape<T> shape)
-            where T : IShape<T>
+        public int CalculateDifference(SKSurface result, SKRectI bounds)
         {
             var difference = 0;
 
@@ -108,13 +107,13 @@ namespace Image2SVG.Image
             int bytesPerRow = image.Info.RowBytes;
             int bytesPerPixel = image.Info.BytesPerPixel;
 
-            int bottom = Math.Min(image.Height, shape.Bounds.Bottom);
-            int right = Math.Min(image.Width, shape.Bounds.Right);
+            int bottom = Math.Min(image.Height, bounds.Bottom);
+            int right = Math.Min(image.Width, bounds.Right);
 
-            for (int y = shape.Bounds.Top; y < bottom; y++)
+            for (int y = bounds.Top; y < bottom; y++)
             {
                 var offset = y * bytesPerRow;
-                for (int x = shape.Bounds.Left; x < right; x++)
+                for (int x = bounds.Left; x < right; x++)
                 {
                     for (int channel = 0; channel < bytesPerPixel; channel++)
                     {
