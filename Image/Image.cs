@@ -30,7 +30,7 @@ namespace Image2SVG.Image
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                T shape = EvolveShapes<T>(samples, 10, 10);
+                T shape = EvolveShapes<T>(samples, 3, 3);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
@@ -64,8 +64,9 @@ namespace Image2SVG.Image
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                var shape = new T { Alpha = 128 };
+                var shape = new T();
                 shape.RandomizeParameters(image.Info);
+                shape.Color = AverageColor(original, shape.Bounds).WithAlpha(128);
                 shapes.Add(shape);
             }
             List<Tuple<T, int>> rank = RankShapes<T>(shapes);
@@ -124,6 +125,40 @@ namespace Image2SVG.Image
             }
 
             return difference;
+        }
+
+        public SKColor AverageColor(SKSurface surface, SKRectI bounds)
+        {
+            long r = 0;
+            long g = 0;
+            long b = 0;
+
+            ReadOnlySpan<byte> pixels = surface.PeekPixels().GetPixelSpan();
+
+            int bytesPerRow = image.Info.RowBytes;
+            int bytesPerPixel = image.Info.BytesPerPixel;
+
+            int bottom = Math.Min(image.Height, bounds.Bottom);
+            int right = Math.Min(image.Width, bounds.Right);
+
+            for (int y = bounds.Top; y < bottom; y++)
+            {
+                var offset = y * bytesPerRow;
+                for (int x = bounds.Left; x < right; x++)
+                {
+                    int pixel = offset + x * bytesPerPixel;
+                    r += pixels[pixel];
+                    g += pixels[pixel + 1];
+                    b += pixels[pixel + 2];
+                }
+            }
+
+            int size = Math.Max(bounds.Width * bounds.Height, 1);
+            r /= size;
+            g /= size;
+            b /= size;
+
+            return new SKColor((byte)r, (byte)g, (byte)b);
         }
 
         public void SaveTo(string filename)
