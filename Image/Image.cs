@@ -108,13 +108,13 @@ namespace Image2SVG.Image
             int bytesPerRow = image.Info.RowBytes;
             int bytesPerPixel = image.Info.BytesPerPixel;
 
-            int bottom = Math.Min(image.Height, (int)shape.Bounds.Bottom);
-            int right = Math.Min(image.Width, (int)shape.Bounds.Right);
+            int bottom = Math.Min(image.Height, shape.Bounds.Bottom);
+            int right = Math.Min(image.Width, shape.Bounds.Right);
 
-            for (int y = (int)shape.Bounds.Top; y < bottom; y++)
+            for (int y = shape.Bounds.Top; y < bottom; y++)
             {
                 var offset = y * bytesPerRow;
-                for (int x = (int)shape.Bounds.Left; x < right; x++)
+                for (int x = shape.Bounds.Left; x < right; x++)
                 {
                     for (int channel = 0; channel < bytesPerPixel; channel++)
                     {
