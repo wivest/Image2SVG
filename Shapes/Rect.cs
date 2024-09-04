@@ -9,9 +9,8 @@ namespace Image2SVG.Shapes
         private float width;
         private float height;
 
-        private SKPaint paint = new();
-
         public byte Alpha { get; set; }
+        public SKColor Color { get; set; }
         public SKRectI Bounds
         {
             get { return new SKRectI((int)x, (int)y, (int)(x + width), (int)(y + height)); }
@@ -19,6 +18,7 @@ namespace Image2SVG.Shapes
 
         public void Draw(SKCanvas canvas)
         {
+            var paint = new SKPaint { Color = Color };
             canvas.DrawRect(x, y, width, height, paint);
         }
 
@@ -39,7 +39,7 @@ namespace Image2SVG.Shapes
             var color = new byte[3];
             random.NextBytes(color);
 
-            paint.Color = new SKColor(color[0], color[1], color[2], Alpha);
+            Color = new SKColor(color[0], color[1], color[2], Alpha);
         }
 
         public Rect Mutate(float percentage)
@@ -50,7 +50,7 @@ namespace Image2SVG.Shapes
                 y = y,
                 width = width,
                 height = height,
-                paint = paint,
+                Color = Color,
                 Alpha = Alpha
             };
             var random = new Random();
@@ -59,10 +59,10 @@ namespace Image2SVG.Shapes
             clone.y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
             clone.width *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
             clone.height *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            var r = (byte)(clone.paint.Color.Red * 1 + (float)random.NextDouble() * percentage);
-            var g = (byte)(clone.paint.Color.Green * 1 + (float)random.NextDouble() * percentage);
-            var b = (byte)(clone.paint.Color.Blue * 1 + (float)random.NextDouble() * percentage);
-            clone.paint.Color = new SKColor(r, g, b, Alpha);
+            var r = (byte)(clone.Color.Red * 1 + (float)random.NextDouble() * percentage);
+            var g = (byte)(clone.Color.Green * 1 + (float)random.NextDouble() * percentage);
+            var b = (byte)(clone.Color.Blue * 1 + (float)random.NextDouble() * percentage);
+            clone.Color = new SKColor(r, g, b, Alpha);
 
             return clone;
         }

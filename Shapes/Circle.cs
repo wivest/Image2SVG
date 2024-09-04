@@ -8,9 +8,8 @@ namespace Image2SVG.Shapes
         private float y;
         private float radius;
 
-        private SKPaint paint = new();
-
         public byte Alpha { get; set; }
+        public SKColor Color { get; set; }
         public SKRectI Bounds
         {
             get
@@ -26,6 +25,7 @@ namespace Image2SVG.Shapes
 
         public void Draw(SKCanvas canvas)
         {
+            var paint = new SKPaint { Color = Color };
             canvas.DrawCircle(x, y, radius, paint);
         }
 
@@ -40,7 +40,7 @@ namespace Image2SVG.Shapes
             var color = new byte[3];
             random.NextBytes(color);
 
-            paint.Color = new SKColor(color[0], color[1], color[2], Alpha);
+            Color = new SKColor(color[0], color[1], color[2], Alpha);
         }
 
         public Circle Mutate(float percentage)
@@ -50,7 +50,7 @@ namespace Image2SVG.Shapes
                 x = x,
                 y = y,
                 radius = radius,
-                paint = paint,
+                Color = Color,
                 Alpha = Alpha
             };
             var random = new Random();
@@ -58,10 +58,10 @@ namespace Image2SVG.Shapes
             clone.x *= 1 + (float)random.NextDouble() * percentage;
             clone.y *= 1 + (float)random.NextDouble() * percentage;
             clone.radius *= 1 + (float)random.NextDouble() * percentage;
-            var r = (byte)(clone.paint.Color.Red * 1 + (float)random.NextDouble() * percentage);
-            var g = (byte)(clone.paint.Color.Green * 1 + (float)random.NextDouble() * percentage);
-            var b = (byte)(clone.paint.Color.Blue * 1 + (float)random.NextDouble() * percentage);
-            clone.paint.Color = new SKColor(r, g, b, Alpha);
+            var r = (byte)(clone.Color.Red * 1 + (float)random.NextDouble() * percentage);
+            var g = (byte)(clone.Color.Green * 1 + (float)random.NextDouble() * percentage);
+            var b = (byte)(clone.Color.Blue * 1 + (float)random.NextDouble() * percentage);
+            clone.Color = new SKColor(r, g, b, Alpha);
 
             return clone;
         }
