@@ -18,7 +18,7 @@ namespace Image2SVG.Application
 
             generated = SKSurface.Create(image.Info);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
-            generator = new Generator();
+            generator = new Generator(image.Info, source, generated);
         }
 
         public void SaveTo(string filename)
@@ -35,7 +35,7 @@ namespace Image2SVG.Application
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                T shape = generator.EvolveShapes<T>(10, 3, 3, source, generated, image.Info);
+                T shape = generator.EvolveShapes<T>(10, 3, 3);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");

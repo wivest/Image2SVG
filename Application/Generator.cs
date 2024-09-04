@@ -5,12 +5,18 @@ namespace Image2SVG.Application
 {
     class Generator
     {
-        public List<Tuple<T, int>> RankShapes<T>(
-            List<T> shapes,
-            SKSurface source,
-            SKSurface generated,
-            SKImageInfo info
-        )
+        private SKImageInfo info;
+        private SKSurface source;
+        private SKSurface generated;
+
+        public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
+        {
+            this.info = info;
+            this.source = source;
+            this.generated = generated;
+        }
+
+        public List<Tuple<T, int>> RankShapes<T>(List<T> shapes)
             where T : IShape<T>
         {
             SKSurface currentGeneratedCopy = SKSurface.Create(info);
@@ -19,20 +25,10 @@ namespace Image2SVG.Application
             foreach (T shape in shapes)
             {
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-                int currentDifference = CalculateDifference(
-                    source,
-                    currentGeneratedCopy,
-                    shape.Bounds,
-                    info
-                );
+                int currentDifference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
 
                 shape.Draw(currentGeneratedCopy.Canvas);
-                int difference = CalculateDifference(
-                    source,
-                    currentGeneratedCopy,
-                    shape.Bounds,
-                    info
-                );
+                int difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
                 rank.Add(new Tuple<T, int>(shape, difference - currentDifference));
             }
 
@@ -41,14 +37,7 @@ namespace Image2SVG.Application
             return rank;
         }
 
-        public T EvolveShapes<T>(
-            int samples,
-            int mutations,
-            int generations,
-            SKSurface source,
-            SKSurface generated,
-            SKImageInfo info
-        )
+        public T EvolveShapes<T>(int samples, int mutations, int generations)
             where T : IShape<T>, new()
         {
             var shapes = new List<T>();
@@ -56,15 +45,15 @@ namespace Image2SVG.Application
             {
                 var shape = new T();
                 shape.RandomizeParameters(info);
-                shape.Color = AverageColor(source, shape.Bounds, info).WithAlpha(128);
+                shape.Color = AverageColor(source, shape.Bounds).WithAlpha(128);
                 shapes.Add(shape);
             }
-            List<Tuple<T, int>> rank = RankShapes<T>(shapes, source, generated, info);
+            List<Tuple<T, int>> rank = RankShapes<T>(shapes);
 
             for (int generation = 1; generation < generations; generation++)
             {
                 shapes = MutateShapes<T>(rank, samples, mutations);
-                rank = RankShapes<T>(shapes, source, generated, info);
+                rank = RankShapes<T>(shapes);
             }
 
             return rank[0].Item1;
@@ -88,17 +77,12 @@ namespace Image2SVG.Application
             return shapes;
         }
 
-        public int CalculateDifference(
-            SKSurface source,
-            SKSurface generated,
-            SKRectI bounds,
-            SKImageInfo info
-        )
+        public int CalculateDifference(SKSurface current, SKRectI bounds)
         {
             var difference = 0;
 
             ReadOnlySpan<byte> originalPixels = source.PeekPixels().GetPixelSpan();
-            ReadOnlySpan<byte> resultPixels = generated.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> currentPixels = current.PeekPixels().GetPixelSpan();
 
             int bytesPerRow = info.RowBytes;
             int bytesPerPixel = info.BytesPerPixel;
@@ -114,7 +98,7 @@ namespace Image2SVG.Application
                     for (int channel = 0; channel < bytesPerPixel; channel++)
                     {
                         int i = offset + x * bytesPerPixel + channel;
-                        difference += Math.Abs(originalPixels[i] - resultPixels[i]);
+                        difference += Math.Abs(originalPixels[i] - currentPixels[i]);
                     }
                 }
             }
@@ -122,7 +106,7 @@ namespace Image2SVG.Application
             return difference;
         }
 
-        public SKColor AverageColor(SKSurface surface, SKRectI bounds, SKImageInfo info)
+        public SKColor AverageColor(SKSurface surface, SKRectI bounds)
         {
             long r = 0;
             long g = 0;
