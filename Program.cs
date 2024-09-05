@@ -1,18 +1,19 @@
 ﻿using Image2SVG.Application;
 using Image2SVG.Shapes;
-using SkiaSharp;
 
-if (args.Length < 2)
+const string IMAGE_FOLDER = "images/";
+const string OUTPUT_FILENAME = "result.png";
+
+if (args.Length < 1)
 {
-    Console.WriteLine("No input AND output file specified.");
+    Console.WriteLine("No input file specified.");
     return 1;
 }
 
-string inputFilename = $"images/{args[0]}";
-string outputFilename = $"images/{args[1]}";
+string inputFilename = args[0];
 
-var image = new Image(inputFilename);
-image.Generate<Rect>(100);
-image.SaveTo(outputFilename);
+var image = new Image(IMAGE_FOLDER + inputFilename);
+image.Generate<Rect>(10);
+image.SaveTo(IMAGE_FOLDER + OUTPUT_FILENAME);
 
 return 0;
