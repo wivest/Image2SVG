@@ -35,7 +35,7 @@ namespace Image2SVG.Application
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                T shape = generator.EvolveShapes<T>(10, 3, 3);
+                T shape = generator.EvolveShapes<T>(50, 5, 5);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
