@@ -16,11 +16,10 @@ namespace Image2SVG.Application
             this.generated = generated;
         }
 
-        public Rank<T> RankShapes<T>(List<T> shapes)
+        public void RankShapes<T>(Rank<T> rank, List<T> shapes)
             where T : IShape<T>
         {
             SKSurface currentGeneratedCopy = SKSurface.Create(info);
-            var rank = new Rank<T>();
 
             foreach (T shape in shapes)
             {
@@ -33,8 +32,6 @@ namespace Image2SVG.Application
             }
 
             rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
-
-            return rank;
         }
 
         public T EvolveShapes<T>(int samples, int mutations, int generations)
@@ -48,25 +45,28 @@ namespace Image2SVG.Application
                 shape.Color = AverageColor(source, shape.Bounds).WithAlpha(128);
                 shapes.Add(shape);
             }
-            Rank<T> rank = RankShapes<T>(shapes);
 
+            var rank = new Rank<T>();
+            RankShapes<T>(rank, shapes);
             for (int generation = 1; generation < generations; generation++)
             {
-                shapes = MutateShapes<T>(rank, samples, mutations);
-                rank = RankShapes<T>(shapes);
+                shapes = MutateShapes<T>(rank, mutations);
+                RankShapes<T>(rank, shapes);
+                rank.RemoveRange(samples, rank.Count - samples);
+                Console.WriteLine(generation);
             }
 
             return rank[0].Item1;
         }
 
-        public List<T> MutateShapes<T>(Rank<T> rank, int samples, int mutations)
-            where T : IShape<T>, new()
+        public List<T> MutateShapes<T>(Rank<T> rank, int mutations)
+            where T : IShape<T>
         {
             var shapes = new List<T>();
 
-            for (int top = 0; top < samples; top++)
+            foreach (var item in rank)
             {
-                T shape = rank[top].Item1;
+                T shape = item.Item1;
                 shapes.Add(shape);
                 for (int i = 0; i < mutations; i++)
                 {
