@@ -16,11 +16,11 @@ namespace Image2SVG.Application
             this.generated = generated;
         }
 
-        public List<Tuple<T, int>> RankShapes<T>(List<T> shapes)
+        public Rank<T> RankShapes<T>(List<T> shapes)
             where T : IShape<T>
         {
             SKSurface currentGeneratedCopy = SKSurface.Create(info);
-            var rank = new List<Tuple<T, int>>();
+            var rank = new Rank<T>();
 
             foreach (T shape in shapes)
             {
@@ -48,7 +48,7 @@ namespace Image2SVG.Application
                 shape.Color = AverageColor(source, shape.Bounds).WithAlpha(128);
                 shapes.Add(shape);
             }
-            List<Tuple<T, int>> rank = RankShapes<T>(shapes);
+            Rank<T> rank = RankShapes<T>(shapes);
 
             for (int generation = 1; generation < generations; generation++)
             {
@@ -59,7 +59,7 @@ namespace Image2SVG.Application
             return rank[0].Item1;
         }
 
-        public List<T> MutateShapes<T>(List<Tuple<T, int>> rank, int samples, int mutations)
+        public List<T> MutateShapes<T>(Rank<T> rank, int samples, int mutations)
             where T : IShape<T>, new()
         {
             var shapes = new List<T>();
