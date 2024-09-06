@@ -77,6 +77,23 @@ namespace Image2SVG.Application
             return shapes;
         }
 
+        public int CalculatePixelDifference(
+            ReadOnlySpan<byte> originalPixels,
+            ReadOnlySpan<byte> currentPixels,
+            int pixelIndex
+        )
+        {
+            int difference = 0;
+
+            for (int channel = 0; channel < info.BytesPerPixel; channel++)
+            {
+                int i = pixelIndex + channel;
+                difference += Math.Abs(originalPixels[i] - currentPixels[i]);
+            }
+
+            return difference;
+        }
+
         public int CalculateDifference(SKSurface current, SKRectI bounds)
         {
             var difference = 0;
@@ -92,14 +109,11 @@ namespace Image2SVG.Application
 
             for (int y = bounds.Top; y < bottom; y++)
             {
-                var offset = y * bytesPerRow;
+                int offset = y * bytesPerRow;
                 for (int x = bounds.Left; x < right; x++)
                 {
-                    for (int channel = 0; channel < bytesPerPixel; channel++)
-                    {
-                        int i = offset + x * bytesPerPixel + channel;
-                        difference += Math.Abs(originalPixels[i] - currentPixels[i]);
-                    }
+                    int index = offset + x * bytesPerPixel;
+                    difference += CalculatePixelDifference(originalPixels, currentPixels, index);
                 }
             }
 
