@@ -9,11 +9,15 @@ namespace Image2SVG.Application
         private SKSurface source;
         private SKSurface generated;
 
+        private long[,] imageDifference;
+
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
             this.info = info;
             this.source = source;
             this.generated = generated;
+
+            imageDifference = new long[info.Height, info.Width];
         }
 
         public void RankShapes<T>(Rank<T> rank, List<T> shapes)
@@ -118,6 +122,30 @@ namespace Image2SVG.Application
             }
 
             return difference;
+        }
+
+        public void PrecalculateDifference()
+        {
+            ReadOnlySpan<byte> originalPixels = source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> currentPixels = generated.PeekPixels().GetPixelSpan();
+
+            int bytesPerRow = info.RowBytes;
+            int bytesPerPixel = info.BytesPerPixel;
+
+            for (int row = 0; row < info.Height; row++)
+            {
+                int offset = row * bytesPerRow;
+                for (int col = 0; col < info.Width; col++)
+                {
+                    int index = offset + col * bytesPerPixel;
+                    int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
+                    imageDifference[row, col] =
+                        difference
+                        + imageDifference[row - 1, col]
+                        + imageDifference[row, col - 1]
+                        - imageDifference[row - 1, col - 1];
+                }
+            }
         }
 
         public SKColor AverageColor(SKSurface surface, SKRectI bounds)
