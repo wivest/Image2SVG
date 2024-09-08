@@ -161,6 +161,14 @@ namespace Image2SVG.Application
             }
         }
 
+        public long GetDifference(SKRectI bounds)
+        {
+            return imageDifference[bounds.Bottom, bounds.Right]
+                - imageDifference[bounds.Top, bounds.Right]
+                - imageDifference[bounds.Bottom, bounds.Left]
+                + imageDifference[bounds.Top, bounds.Left];
+        }
+
         public SKColor AverageColor(SKSurface surface, SKRectI bounds)
         {
             long r = 0;
