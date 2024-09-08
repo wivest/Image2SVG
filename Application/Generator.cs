@@ -132,10 +132,23 @@ namespace Image2SVG.Application
             int bytesPerRow = info.RowBytes;
             int bytesPerPixel = info.BytesPerPixel;
 
-            for (int row = 0; row < info.Height; row++)
+            imageDifference[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
+
+            for (int col = 1; col < info.Width; col++)
+            {
+                int index = col * bytesPerPixel;
+                int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
+                imageDifference[0, col] = difference + imageDifference[0, col - 1];
+            }
+
+            for (int row = 1; row < info.Height; row++)
             {
                 int offset = row * bytesPerRow;
-                for (int col = 0; col < info.Width; col++)
+
+                imageDifference[row, 0] =
+                    CalculatePixelDifference(originalPixels, currentPixels, offset)
+                    + imageDifference[row - 1, 0];
+                for (int col = 1; col < info.Width; col++)
                 {
                     int index = offset + col * bytesPerPixel;
                     int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
