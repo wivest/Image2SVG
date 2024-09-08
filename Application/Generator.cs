@@ -27,9 +27,9 @@ namespace Image2SVG.Application
 
             foreach (T shape in shapes)
             {
-                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-                int currentDifference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
+                int currentDifference = (int)GetDifference(shape.Bounds);
 
+                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
                 int difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
                 rank.Add(new Tuple<T, int>(shape, difference - currentDifference));
@@ -41,6 +41,8 @@ namespace Image2SVG.Application
         public T EvolveShapes<T>(int samples, int mutations, int generations)
             where T : IShape<T>, new()
         {
+            PrecalculateDifference();
+
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
@@ -52,12 +54,13 @@ namespace Image2SVG.Application
 
             var rank = new Rank<T>();
             RankShapes<T>(rank, shapes);
+            rank.RemoveRange(samples, rank.Count - samples);
+
             for (int generation = 1; generation < generations; generation++)
             {
                 shapes = MutateShapes<T>(rank, mutations);
                 RankShapes<T>(rank, shapes);
                 rank.RemoveRange(samples, rank.Count - samples);
-                Console.WriteLine(generation);
             }
 
             return rank[0].Item1;
@@ -163,9 +166,12 @@ namespace Image2SVG.Application
 
         public long GetDifference(SKRectI bounds)
         {
-            return imageDifference[bounds.Bottom, bounds.Right]
-                - imageDifference[bounds.Top, bounds.Right]
-                - imageDifference[bounds.Bottom, bounds.Left]
+            int bottom = Math.Min(info.Height - 1, bounds.Bottom);
+            int right = Math.Min(info.Width - 1, bounds.Right);
+
+            return imageDifference[bottom, right]
+                - imageDifference[bounds.Top, right]
+                - imageDifference[bottom, bounds.Left]
                 + imageDifference[bounds.Top, bounds.Left];
         }
 
