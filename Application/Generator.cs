@@ -27,12 +27,12 @@ namespace Image2SVG.Application
 
             foreach (T shape in shapes)
             {
-                int currentDifference = (int)GetDifference(shape.Bounds);
+                long currentDifference = GetDifference(shape.Bounds);
 
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
-                int difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
-                rank.Add(new Tuple<T, int>(shape, difference - currentDifference));
+                long difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
+                rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
             }
 
             rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
@@ -101,9 +101,9 @@ namespace Image2SVG.Application
             return difference;
         }
 
-        public int CalculateDifference(SKSurface current, SKRectI bounds)
+        public long CalculateDifference(SKSurface current, SKRectI bounds)
         {
-            var difference = 0;
+            long difference = 0;
 
             ReadOnlySpan<byte> originalPixels = source.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> currentPixels = current.PeekPixels().GetPixelSpan();
