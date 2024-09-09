@@ -3,12 +3,13 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Image
+    class Image<T>
+        where T : IShape<T>, new()
     {
         private readonly SKImage image;
         private readonly SKSurface source;
         private readonly SKSurface generated;
-        private readonly Generator generator;
+        private readonly Generator<T> generator;
 
         public Image(string filename)
         {
@@ -18,7 +19,7 @@ namespace Image2SVG.Application
 
             generated = SKSurface.Create(image.Info);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
-            generator = new Generator(image.Info, source, generated);
+            generator = new Generator<T>(image.Info, source, generated);
         }
 
         public void SaveTo(string filename)
@@ -28,14 +29,13 @@ namespace Image2SVG.Application
             generatedImage.Encode().SaveTo(stream);
         }
 
-        public void Generate<T>(int numberOfShapes)
-            where T : IShape<T>, new()
+        public void Generate(int numberOfShapes)
         {
             for (int i = 0; i < numberOfShapes; i++)
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
-                T shape = generator.EvolveShapes<T>(50, 5, 5);
+                T shape = generator.EvolveShapes(50, 5, 5);
                 shape.Draw(generated.Canvas);
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");

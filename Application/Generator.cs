@@ -3,7 +3,8 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Generator
+    class Generator<T>
+        where T : IShape<T>, new()
     {
         private SKImageInfo info;
         private SKSurface source;
@@ -20,8 +21,7 @@ namespace Image2SVG.Application
             imageDifference = new long[info.Height, info.Width];
         }
 
-        public void RankShapes<T>(Rank<T> rank, List<T> shapes)
-            where T : IShape<T>
+        public void RankShapes(Rank<T> rank, List<T> shapes)
         {
             SKSurface currentGeneratedCopy = SKSurface.Create(info);
 
@@ -38,8 +38,7 @@ namespace Image2SVG.Application
             rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
         }
 
-        public T EvolveShapes<T>(int samples, int mutations, int generations)
-            where T : IShape<T>, new()
+        public T EvolveShapes(int samples, int mutations, int generations)
         {
             PrecalculateDifference();
 
@@ -53,21 +52,20 @@ namespace Image2SVG.Application
             }
 
             var rank = new Rank<T>();
-            RankShapes<T>(rank, shapes);
+            RankShapes(rank, shapes);
             rank.RemoveRange(samples, rank.Count - samples);
 
             for (int generation = 1; generation < generations; generation++)
             {
-                shapes = MutateShapes<T>(rank, mutations);
-                RankShapes<T>(rank, shapes);
+                shapes = MutateShapes(rank, mutations);
+                RankShapes(rank, shapes);
                 rank.RemoveRange(samples, rank.Count - samples);
             }
 
             return rank[0].Item1;
         }
 
-        public List<T> MutateShapes<T>(Rank<T> rank, int mutations)
-            where T : IShape<T>
+        public List<T> MutateShapes(Rank<T> rank, int mutations)
         {
             var shapes = new List<T>();
 
