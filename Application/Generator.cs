@@ -21,23 +21,6 @@ namespace Image2SVG.Application
             imageDifference = new long[info.Height, info.Width];
         }
 
-        public void RankShapes(Rank<T> rank, List<T> shapes)
-        {
-            SKSurface currentGeneratedCopy = SKSurface.Create(info);
-
-            foreach (T shape in shapes)
-            {
-                long currentDifference = GetDifference(shape.Bounds);
-
-                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
-                shape.Draw(currentGeneratedCopy.Canvas);
-                long difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
-                rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
-            }
-
-            rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
-        }
-
         public T EvolveShapes(int samples, int mutations, int generations)
         {
             PrecalculateDifference();
@@ -57,7 +40,7 @@ namespace Image2SVG.Application
 
             for (int generation = 1; generation < generations; generation++)
             {
-                shapes = MutateShapes(rank, mutations);
+                shapes = rank.MutateShapes(mutations);
                 RankShapes(rank, shapes);
                 rank.RemoveRange(samples, rank.Count - samples);
             }
@@ -65,21 +48,21 @@ namespace Image2SVG.Application
             return rank[0].Item1;
         }
 
-        public List<T> MutateShapes(Rank<T> rank, int mutations)
+        public void RankShapes(Rank<T> rank, List<T> shapes)
         {
-            var shapes = new List<T>();
+            SKSurface currentGeneratedCopy = SKSurface.Create(info);
 
-            foreach (var item in rank)
+            foreach (T shape in shapes)
             {
-                T shape = item.Item1;
-                shapes.Add(shape);
-                for (int i = 0; i < mutations; i++)
-                {
-                    shapes.Add(shape.Mutate(0.1f));
-                }
+                long currentDifference = GetDifference(shape.Bounds);
+
+                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
+                shape.Draw(currentGeneratedCopy.Canvas);
+                long difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
+                rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
             }
 
-            return shapes;
+            rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
         }
 
         public int CalculatePixelDifference(
