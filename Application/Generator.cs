@@ -28,7 +28,7 @@ namespace Image2SVG.Application
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                var shape = new T();
+                var shape = new T { Info = info };
                 shape.RandomizeParameters(info);
                 shape.Color = AverageColor(source, shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
@@ -144,9 +144,9 @@ namespace Image2SVG.Application
 
         public long GetDifference(SKRectI bounds)
         {
-            return imageDifference[bounds.Bottom - 1, bounds.Right - 1]
-                - imageDifference[bounds.Top, bounds.Right - 1]
-                - imageDifference[bounds.Bottom - 1, bounds.Left]
+            return imageDifference[bounds.Bottom, bounds.Right]
+                - imageDifference[bounds.Top, bounds.Right]
+                - imageDifference[bounds.Bottom, bounds.Left]
                 + imageDifference[bounds.Top, bounds.Left];
         }
 

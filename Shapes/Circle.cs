@@ -11,9 +11,8 @@ namespace Image2SVG.Shapes
         public byte Alpha { get; set; }
         public SKColor Color { get; set; }
 
-        public SKImageInfo Info { get; }
-        public SKRectI Bounds { get; }
-        public SKRectI ImageBounds
+        public SKImageInfo Info { get; set; }
+        public SKRectI Bounds
         {
             get
             {
@@ -54,7 +53,8 @@ namespace Image2SVG.Shapes
                 y = y,
                 radius = radius,
                 Color = Color,
-                Alpha = Alpha
+                Alpha = Alpha,
+                Info = Info
             };
             var random = new Random();
 

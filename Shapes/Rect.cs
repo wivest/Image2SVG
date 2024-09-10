@@ -12,9 +12,8 @@ namespace Image2SVG.Shapes
         public byte Alpha { get; set; }
         public SKColor Color { get; set; }
 
-        public SKImageInfo Info { get; }
-        public SKRectI Bounds { get; }
-        public SKRectI ImageBounds
+        public SKImageInfo Info { get; set; }
+        public SKRectI Bounds
         {
             get { return new SKRectI((int)x, (int)y, (int)(x + width), (int)(y + height)); }
         }
@@ -54,14 +53,15 @@ namespace Image2SVG.Shapes
                 width = width,
                 height = height,
                 Color = Color,
-                Alpha = Alpha
+                Alpha = Alpha,
+                Info = Info
             };
             var random = new Random();
 
             clone.x *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
             clone.y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            clone.width *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            clone.height *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.width *= Math.Abs(1 + percentage - 2 * (float)random.NextDouble() * percentage);
+            clone.height *= Math.Abs(1 + percentage - 2 * (float)random.NextDouble() * percentage);
             var r = (byte)(clone.Color.Red * 1 + (float)random.NextDouble() * percentage);
             var g = (byte)(clone.Color.Green * 1 + (float)random.NextDouble() * percentage);
             var b = (byte)(clone.Color.Blue * 1 + (float)random.NextDouble() * percentage);
