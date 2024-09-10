@@ -13,13 +13,23 @@ namespace Image2SVG.Application
 
         public Image(string filename)
         {
-            image = SKImage.FromEncodedData(filename);
+            image = Resize(filename, 0.5f);
             source = SKSurface.Create(image.Info);
             source.Canvas.DrawImage(image, 0, 0);
 
             generated = SKSurface.Create(image.Info);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
             generator = new Generator<T>(image.Info, source, generated);
+        }
+
+        public SKImage Resize(string filename, float scale)
+        {
+            SKImage source = SKImage.FromEncodedData(filename);
+            SKBitmap bitmap = SKBitmap.Decode(filename);
+            var size = new SKImageInfo((int)(source.Width * scale), (int)(source.Height * scale));
+
+            bitmap = bitmap.Resize(size, SKFilterQuality.High);
+            return SKImage.FromBitmap(bitmap);
         }
 
         public void SaveTo(string filename)
