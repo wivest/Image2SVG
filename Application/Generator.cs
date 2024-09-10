@@ -30,7 +30,7 @@ namespace Image2SVG.Application
             {
                 var shape = new T();
                 shape.RandomizeParameters(info);
-                shape.Color = AverageColor(source, shape.Bounds).WithAlpha(128);
+                shape.Color = AverageColor(source, shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
 
@@ -54,11 +54,11 @@ namespace Image2SVG.Application
 
             foreach (T shape in shapes)
             {
-                long currentDifference = GetDifference(shape.Bounds);
+                long currentDifference = GetDifference(shape.ImageBounds);
 
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
-                long difference = CalculateDifference(currentGeneratedCopy, shape.Bounds);
+                long difference = CalculateDifference(currentGeneratedCopy, shape.ImageBounds);
                 rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
             }
 
@@ -92,13 +92,10 @@ namespace Image2SVG.Application
             int bytesPerRow = info.RowBytes;
             int bytesPerPixel = info.BytesPerPixel;
 
-            int bottom = Math.Min(info.Height, bounds.Bottom);
-            int right = Math.Min(info.Width, bounds.Right);
-
-            for (int y = bounds.Top; y < bottom; y++)
+            for (int y = bounds.Top; y < bounds.Bottom; y++)
             {
                 int offset = y * bytesPerRow;
-                for (int x = bounds.Left; x < right; x++)
+                for (int x = bounds.Left; x < bounds.Right; x++)
                 {
                     int index = offset + x * bytesPerPixel;
                     difference += CalculatePixelDifference(originalPixels, currentPixels, index);
@@ -147,12 +144,9 @@ namespace Image2SVG.Application
 
         public long GetDifference(SKRectI bounds)
         {
-            int bottom = Math.Min(info.Height - 1, bounds.Bottom);
-            int right = Math.Min(info.Width - 1, bounds.Right);
-
-            return imageDifference[bottom, right]
-                - imageDifference[bounds.Top, right]
-                - imageDifference[bottom, bounds.Left]
+            return imageDifference[bounds.Bottom - 1, bounds.Right - 1]
+                - imageDifference[bounds.Top, bounds.Right - 1]
+                - imageDifference[bounds.Bottom - 1, bounds.Left]
                 + imageDifference[bounds.Top, bounds.Left];
         }
 
@@ -167,13 +161,10 @@ namespace Image2SVG.Application
             int bytesPerRow = info.RowBytes;
             int bytesPerPixel = info.BytesPerPixel;
 
-            int bottom = Math.Min(info.Height, bounds.Bottom);
-            int right = Math.Min(info.Width, bounds.Right);
-
-            for (int y = bounds.Top; y < bottom; y++)
+            for (int y = bounds.Top; y < bounds.Bottom; y++)
             {
                 var offset = y * bytesPerRow;
-                for (int x = bounds.Left; x < right; x++)
+                for (int x = bounds.Left; x < bounds.Right; x++)
                 {
                     int pixel = offset + x * bytesPerPixel;
                     r += pixels[pixel];

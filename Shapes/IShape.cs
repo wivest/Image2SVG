@@ -11,7 +11,15 @@ namespace Image2SVG.Shapes
         public SKRectI Bounds { get; }
         public SKRectI ImageBounds
         {
-            get { return new SKRectI(); }
+            get
+            {
+                return new SKRectI(
+                    Math.Max(0, Bounds.Left),
+                    Math.Max(0, Bounds.Top),
+                    Math.Min(Info.Width, Bounds.Right),
+                    Math.Min(Info.Height, Bounds.Bottom)
+                );
+            }
         }
 
         public void Draw(SKCanvas canvas);
