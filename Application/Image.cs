@@ -6,6 +6,8 @@ namespace Image2SVG.Application
     class Image<T>
         where T : IShape<T>, new()
     {
+        private const string RESIZED_FOLDER = "resized/";
+
         private readonly SKSurface source;
         private readonly SKSurface generated;
         private readonly Generator<T> generator;
