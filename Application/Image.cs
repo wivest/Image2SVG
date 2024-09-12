@@ -48,9 +48,11 @@ namespace Image2SVG.Application
 
         private void Save(SKSurface surface, string filename)
         {
-            var stream = new FileStream(filename, FileMode.Create);
             SKImage generatedImage = surface.Snapshot();
-            generatedImage.Encode().SaveTo(stream);
+            using (var stream = new FileStream(filename, FileMode.Create))
+            {
+                generatedImage.Encode().SaveTo(stream);
+            }
         }
 
         public void Generate(int numberOfShapes)
