@@ -14,17 +14,17 @@ namespace Image2SVG.Application
 
         public Image(string filename)
         {
-            SKBitmap bitmap = Resize(filename, 0.5f);
-            source = SKSurface.Create(bitmap.Info);
-            source.Canvas.DrawBitmap(bitmap, 0, 0);
+            SKImage image = SKImage.FromEncodedData(Resize(filename, 0.5f));
+            source = SKSurface.Create(image.Info);
+            source.Canvas.DrawImage(image, 0, 0);
 
-            generated = SKSurface.Create(bitmap.Info);
+            generated = SKSurface.Create(image.Info);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
             Save(generated, "images/pregeneration.png");
-            generator = new Generator<T>(bitmap.Info, source, generated);
+            generator = new Generator<T>(image.Info, source, generated);
         }
 
-        public SKBitmap Resize(string filename, float scale)
+        public string Resize(string filename, float scale)
         {
             SKImage source = SKImage.FromEncodedData(filename);
             SKBitmap bitmap = SKBitmap.Decode(filename);
@@ -32,8 +32,13 @@ namespace Image2SVG.Application
                 (int)(source.Width * scale),
                 (int)(source.Height * scale)
             );
+            bitmap = bitmap.Resize(size, SKFilterQuality.High);
 
-            return bitmap.Resize(size, SKFilterQuality.High);
+            SKSurface resizedSurface = SKSurface.Create(bitmap.Info);
+            resizedSurface.Canvas.DrawBitmap(bitmap, 0, 0);
+            string resizedFilename = RESIZED_FOLDER + filename;
+            Save(resizedSurface, resizedFilename);
+            return resizedFilename;
         }
 
         public void SaveGenerated(string filename)
