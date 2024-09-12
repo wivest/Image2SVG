@@ -14,6 +14,6 @@ string inputFilename = args[0];
 
 var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
 image.Generate(10);
-image.SaveTo(IMAGE_FOLDER + OUTPUT_FILENAME);
+image.SaveGenerated(IMAGE_FOLDER + OUTPUT_FILENAME);
 
 return 0;

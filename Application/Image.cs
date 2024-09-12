@@ -18,7 +18,7 @@ namespace Image2SVG.Application
 
             generated = SKSurface.Create(bitmap.Info);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
-            SaveTo("images/pregeneration.png");
+            Save(generated, "images/pregeneration.png");
             generator = new Generator<T>(bitmap.Info, source, generated);
         }
 
@@ -34,10 +34,15 @@ namespace Image2SVG.Application
             return bitmap.Resize(size, SKFilterQuality.High);
         }
 
-        public void SaveTo(string filename)
+        public void SaveGenerated(string filename)
+        {
+            Save(generated, filename);
+        }
+
+        private void Save(SKSurface surface, string filename)
         {
             var stream = new FileStream(filename, FileMode.Create);
-            SKImage generatedImage = generated.Snapshot();
+            SKImage generatedImage = surface.Snapshot();
             generatedImage.Encode().SaveTo(stream);
         }
 
@@ -49,7 +54,7 @@ namespace Image2SVG.Application
                 stopwatch.Start();
                 T shape = generator.EvolveShapes(50, 5, 5);
                 shape.Draw(generated.Canvas);
-                SaveTo($"images/generation{i}.png");
+                Save(generated, $"images/generation{i}.png");
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
