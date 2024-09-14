@@ -6,19 +6,19 @@ namespace Image2SVG.Application
     class Generator<T>
         where T : IShape<T>, new()
     {
-        private SKImageInfo info;
-        private SKSurface source;
-        private SKSurface generated;
+        public readonly SKImageInfo Info;
+        public readonly SKSurface Source;
+        public readonly SKSurface Generated;
 
-        private Precalculated imageDifference;
+        public readonly Precalculated ImageDifference;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
-            this.info = info;
-            this.source = source;
-            this.generated = generated;
+            Info = info;
+            Source = source;
+            Generated = generated;
 
-            imageDifference = new Precalculated(info);
+            ImageDifference = new Precalculated(info);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations)
@@ -28,9 +28,9 @@ namespace Image2SVG.Application
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                var shape = new T { Info = info };
-                shape.RandomizeParameters(info);
-                shape.Color = AverageColor(source, shape.ImageBounds).WithAlpha(128);
+                var shape = new T { Info = Info };
+                shape.RandomizeParameters(Info);
+                shape.Color = AverageColor(Source, shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
 
@@ -50,13 +50,13 @@ namespace Image2SVG.Application
 
         public void RankShapes(Rank<T> rank, List<T> shapes)
         {
-            SKSurface currentGeneratedCopy = SKSurface.Create(info);
+            SKSurface currentGeneratedCopy = SKSurface.Create(Info);
 
             foreach (T shape in shapes)
             {
-                long currentDifference = imageDifference.GetBoundsValue(shape.ImageBounds);
+                long currentDifference = ImageDifference.GetBoundsValue(shape.ImageBounds);
 
-                currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
+                currentGeneratedCopy.Canvas.DrawSurface(Generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
                 long difference = CalculateDifference(currentGeneratedCopy, shape.ImageBounds);
                 rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
@@ -73,7 +73,7 @@ namespace Image2SVG.Application
         {
             int difference = 0;
 
-            for (int channel = 0; channel < info.BytesPerPixel; channel++)
+            for (int channel = 0; channel < Info.BytesPerPixel; channel++)
             {
                 int i = pixelIndex + channel;
                 difference += Math.Abs(originalPixels[i] - currentPixels[i]);
@@ -86,11 +86,11 @@ namespace Image2SVG.Application
         {
             long difference = 0;
 
-            ReadOnlySpan<byte> originalPixels = source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> originalPixels = Source.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> currentPixels = current.PeekPixels().GetPixelSpan();
 
-            int bytesPerRow = info.RowBytes;
-            int bytesPerPixel = info.BytesPerPixel;
+            int bytesPerRow = Info.RowBytes;
+            int bytesPerPixel = Info.BytesPerPixel;
 
             for (int y = bounds.Top; y < bounds.Bottom; y++)
             {
@@ -107,37 +107,37 @@ namespace Image2SVG.Application
 
         public void PrecalculateDifference()
         {
-            ReadOnlySpan<byte> originalPixels = source.PeekPixels().GetPixelSpan();
-            ReadOnlySpan<byte> currentPixels = generated.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> originalPixels = Source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> currentPixels = Generated.PeekPixels().GetPixelSpan();
 
-            int bytesPerRow = info.RowBytes;
-            int bytesPerPixel = info.BytesPerPixel;
+            int bytesPerRow = Info.RowBytes;
+            int bytesPerPixel = Info.BytesPerPixel;
 
-            imageDifference.Data[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
+            ImageDifference.Data[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
 
-            for (int col = 1; col < info.Width; col++)
+            for (int col = 1; col < Info.Width; col++)
             {
                 int index = col * bytesPerPixel;
                 int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
-                imageDifference.Data[0, col] = difference + imageDifference.Data[0, col - 1];
+                ImageDifference.Data[0, col] = difference + ImageDifference.Data[0, col - 1];
             }
 
-            for (int row = 1; row < info.Height; row++)
+            for (int row = 1; row < Info.Height; row++)
             {
                 int offset = row * bytesPerRow;
 
-                imageDifference.Data[row, 0] =
+                ImageDifference.Data[row, 0] =
                     CalculatePixelDifference(originalPixels, currentPixels, offset)
-                    + imageDifference.Data[row - 1, 0];
-                for (int col = 1; col < info.Width; col++)
+                    + ImageDifference.Data[row - 1, 0];
+                for (int col = 1; col < Info.Width; col++)
                 {
                     int index = offset + col * bytesPerPixel;
                     int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
-                    imageDifference.Data[row, col] =
+                    ImageDifference.Data[row, col] =
                         difference
-                        + imageDifference.Data[row - 1, col]
-                        + imageDifference.Data[row, col - 1]
-                        - imageDifference.Data[row - 1, col - 1];
+                        + ImageDifference.Data[row - 1, col]
+                        + ImageDifference.Data[row, col - 1]
+                        - ImageDifference.Data[row - 1, col - 1];
                 }
             }
         }
@@ -150,8 +150,8 @@ namespace Image2SVG.Application
 
             ReadOnlySpan<byte> pixels = surface.PeekPixels().GetPixelSpan();
 
-            int bytesPerRow = info.RowBytes;
-            int bytesPerPixel = info.BytesPerPixel;
+            int bytesPerRow = Info.RowBytes;
+            int bytesPerPixel = Info.BytesPerPixel;
 
             for (int y = bounds.Top; y < bounds.Bottom; y++)
             {
