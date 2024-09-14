@@ -35,34 +35,17 @@ namespace Image2SVG.Application
             }
 
             var rank = new Rank<T>();
-            RankShapes(rank, shapes);
+            rank.RankShapes(this, shapes);
             rank.RemoveRange(samples, rank.Count - samples);
 
             for (int generation = 1; generation < generations; generation++)
             {
                 shapes = rank.MutateShapes(mutations);
-                RankShapes(rank, shapes);
+                rank.RankShapes(this, shapes);
                 rank.RemoveRange(samples, rank.Count - samples);
             }
 
             return rank[0].Item1;
-        }
-
-        public void RankShapes(Rank<T> rank, List<T> shapes)
-        {
-            SKSurface currentGeneratedCopy = SKSurface.Create(Info);
-
-            foreach (T shape in shapes)
-            {
-                long currentDifference = ImageDifference.GetBoundsValue(shape.ImageBounds);
-
-                currentGeneratedCopy.Canvas.DrawSurface(Generated, 0, 0);
-                shape.Draw(currentGeneratedCopy.Canvas);
-                long difference = CalculateDifference(currentGeneratedCopy, shape.ImageBounds);
-                rank.Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
-            }
-
-            rank.Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
         }
 
         public int CalculatePixelDifference(
@@ -77,29 +60,6 @@ namespace Image2SVG.Application
             {
                 int i = pixelIndex + channel;
                 difference += Math.Abs(originalPixels[i] - currentPixels[i]);
-            }
-
-            return difference;
-        }
-
-        public long CalculateDifference(SKSurface current, SKRectI bounds)
-        {
-            long difference = 0;
-
-            ReadOnlySpan<byte> originalPixels = Source.PeekPixels().GetPixelSpan();
-            ReadOnlySpan<byte> currentPixels = current.PeekPixels().GetPixelSpan();
-
-            int bytesPerRow = Info.RowBytes;
-            int bytesPerPixel = Info.BytesPerPixel;
-
-            for (int y = bounds.Top; y < bounds.Bottom; y++)
-            {
-                int offset = y * bytesPerRow;
-                for (int x = bounds.Left; x < bounds.Right; x++)
-                {
-                    int index = offset + x * bytesPerPixel;
-                    difference += CalculatePixelDifference(originalPixels, currentPixels, index);
-                }
             }
 
             return difference;

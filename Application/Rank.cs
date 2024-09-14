@@ -1,10 +1,34 @@
 using Image2SVG.Shapes;
+using SkiaSharp;
 
 namespace Image2SVG.Application
 {
     class Rank<T> : List<Tuple<T, int>>
-        where T : IShape<T>
+        where T : IShape<T>, new()
     {
+        public void RankShapes(Generator<T> generator, List<T> shapes)
+        {
+            SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
+
+            foreach (T shape in shapes)
+            {
+                long currentDifference = generator.ImageDifference.GetBoundsValue(
+                    shape.ImageBounds
+                );
+
+                currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
+                shape.Draw(currentGeneratedCopy.Canvas);
+                long difference = CalculateDifference(
+                    generator,
+                    currentGeneratedCopy,
+                    shape.ImageBounds
+                );
+                Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
+            }
+
+            Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
+        }
+
         public List<T> MutateShapes(int mutations)
         {
             var shapes = new List<T>();
@@ -20,6 +44,33 @@ namespace Image2SVG.Application
             }
 
             return shapes;
+        }
+
+        private long CalculateDifference(Generator<T> generator, SKSurface current, SKRectI bounds)
+        {
+            long difference = 0;
+
+            ReadOnlySpan<byte> originalPixels = generator.Source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> currentPixels = current.PeekPixels().GetPixelSpan();
+
+            int bytesPerRow = generator.Info.RowBytes;
+            int bytesPerPixel = generator.Info.BytesPerPixel;
+
+            for (int y = bounds.Top; y < bounds.Bottom; y++)
+            {
+                int offset = y * bytesPerRow;
+                for (int x = bounds.Left; x < bounds.Right; x++)
+                {
+                    int index = offset + x * bytesPerPixel;
+                    difference += generator.CalculatePixelDifference(
+                        originalPixels,
+                        currentPixels,
+                        index
+                    );
+                }
+            }
+
+            return difference;
         }
     }
 }
