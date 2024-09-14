@@ -10,7 +10,7 @@ namespace Image2SVG.Application
         private SKSurface source;
         private SKSurface generated;
 
-        private long[,] imageDifference;
+        private Precalculated<long> imageDifference;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -18,7 +18,7 @@ namespace Image2SVG.Application
             this.source = source;
             this.generated = generated;
 
-            imageDifference = new long[info.Height, info.Width];
+            imageDifference = new Precalculated<long>(info);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations)
@@ -113,41 +113,41 @@ namespace Image2SVG.Application
             int bytesPerRow = info.RowBytes;
             int bytesPerPixel = info.BytesPerPixel;
 
-            imageDifference[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
+            imageDifference.Data[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
 
             for (int col = 1; col < info.Width; col++)
             {
                 int index = col * bytesPerPixel;
                 int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
-                imageDifference[0, col] = difference + imageDifference[0, col - 1];
+                imageDifference.Data[0, col] = difference + imageDifference.Data[0, col - 1];
             }
 
             for (int row = 1; row < info.Height; row++)
             {
                 int offset = row * bytesPerRow;
 
-                imageDifference[row, 0] =
+                imageDifference.Data[row, 0] =
                     CalculatePixelDifference(originalPixels, currentPixels, offset)
-                    + imageDifference[row - 1, 0];
+                    + imageDifference.Data[row - 1, 0];
                 for (int col = 1; col < info.Width; col++)
                 {
                     int index = offset + col * bytesPerPixel;
                     int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
-                    imageDifference[row, col] =
+                    imageDifference.Data[row, col] =
                         difference
-                        + imageDifference[row - 1, col]
-                        + imageDifference[row, col - 1]
-                        - imageDifference[row - 1, col - 1];
+                        + imageDifference.Data[row - 1, col]
+                        + imageDifference.Data[row, col - 1]
+                        - imageDifference.Data[row - 1, col - 1];
                 }
             }
         }
 
         public long GetDifference(SKRectI bounds)
         {
-            return imageDifference[bounds.Bottom, bounds.Right]
-                - imageDifference[bounds.Top, bounds.Right]
-                - imageDifference[bounds.Bottom, bounds.Left]
-                + imageDifference[bounds.Top, bounds.Left];
+            return imageDifference.Data[bounds.Bottom, bounds.Right]
+                - imageDifference.Data[bounds.Top, bounds.Right]
+                - imageDifference.Data[bounds.Bottom, bounds.Left]
+                + imageDifference.Data[bounds.Top, bounds.Left];
         }
 
         public SKColor AverageColor(SKSurface surface, SKRectI bounds)
