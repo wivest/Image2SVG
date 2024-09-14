@@ -10,7 +10,7 @@ namespace Image2SVG.Application
         private SKSurface source;
         private SKSurface generated;
 
-        private Precalculated<long> imageDifference;
+        private Precalculated imageDifference;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -18,7 +18,7 @@ namespace Image2SVG.Application
             this.source = source;
             this.generated = generated;
 
-            imageDifference = new Precalculated<long>(info);
+            imageDifference = new Precalculated(info);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations)
@@ -54,7 +54,7 @@ namespace Image2SVG.Application
 
             foreach (T shape in shapes)
             {
-                long currentDifference = GetDifference(shape.ImageBounds);
+                long currentDifference = imageDifference.GetBoundsValue(shape.ImageBounds);
 
                 currentGeneratedCopy.Canvas.DrawSurface(generated, 0, 0);
                 shape.Draw(currentGeneratedCopy.Canvas);
@@ -140,14 +140,6 @@ namespace Image2SVG.Application
                         - imageDifference.Data[row - 1, col - 1];
                 }
             }
-        }
-
-        public long GetDifference(SKRectI bounds)
-        {
-            return imageDifference.Data[bounds.Bottom, bounds.Right]
-                - imageDifference.Data[bounds.Top, bounds.Right]
-                - imageDifference.Data[bounds.Bottom, bounds.Left]
-                + imageDifference.Data[bounds.Top, bounds.Left];
         }
 
         public SKColor AverageColor(SKSurface surface, SKRectI bounds)
