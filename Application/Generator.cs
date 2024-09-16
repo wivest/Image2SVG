@@ -11,6 +11,9 @@ namespace Image2SVG.Application
         public readonly SKSurface Generated;
 
         public readonly Precalculated ImageDifference;
+        public readonly Precalculated RedChannel;
+        public readonly Precalculated GreenChannel;
+        public readonly Precalculated BlueChannel;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -19,6 +22,9 @@ namespace Image2SVG.Application
             Generated = generated;
 
             ImageDifference = new Precalculated(info);
+            RedChannel = new Precalculated(info);
+            GreenChannel = new Precalculated(info);
+            BlueChannel = new Precalculated(info);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations)
@@ -99,6 +105,27 @@ namespace Image2SVG.Application
                         + ImageDifference.Data[row, col - 1]
                         - ImageDifference.Data[row - 1, col - 1];
                 }
+            }
+        }
+
+        public void PrecalculateChannel(Precalculated channel, int channelIndex)
+        {
+            ReadOnlySpan<byte> sourcePixels = Source.PeekPixels().GetPixelSpan();
+            long channelSum = 0;
+
+            for (int row = 0; row < Info.Height; row++)
+            {
+                int rowIndexOffset = row * Info.RowBytes;
+                long channelRowSum = 0;
+
+                for (int col = 0; col < Info.Width; col++)
+                {
+                    int pixelIndex = rowIndexOffset + col * Info.BytesPerPixel;
+                    channelRowSum += sourcePixels[pixelIndex + channelIndex];
+                    channel.Data[row, col] = channelSum + channelRowSum;
+                }
+
+                channelSum += channelRowSum;
             }
         }
 
