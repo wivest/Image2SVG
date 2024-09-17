@@ -4,10 +4,8 @@ namespace Image2SVG.Shapes
 {
     class Rect : IShape<Rect>
     {
-        private float x;
-        private float y;
-        private float width;
-        private float height;
+        private SKPoint center = new();
+        private SKSize size = new();
 
         public byte Alpha { get; set; }
         public SKColor Color { get; set; }
@@ -15,48 +13,60 @@ namespace Image2SVG.Shapes
         public SKImageInfo Info { get; set; }
         public SKRectI Bounds
         {
-            get { return new SKRectI((int)x, (int)y, (int)(x + width), (int)(y + height)); }
+            get
+            {
+                return new SKRectI(
+                    (int)(center.X - size.Width / 2),
+                    (int)(center.Y - size.Height / 2),
+                    (int)(center.X + size.Width / 2),
+                    (int)(center.Y + size.Height / 2)
+                );
+            }
         }
 
         public void Draw(SKCanvas canvas)
         {
             var paint = new SKPaint { Color = Color };
-            canvas.DrawRect(x, y, width, height, paint);
+            canvas.DrawRect(
+                center.X - size.Width / 2,
+                center.Y - size.Height / 2,
+                center.X + size.Width / 2,
+                center.Y + size.Height / 2,
+                paint
+            );
         }
 
         public void RandomizeParameters(SKImageInfo info)
         {
             var random = new Random();
 
-            var x1 = (float)random.NextDouble() * info.Width;
-            var y1 = (float)random.NextDouble() * info.Height;
-            var x2 = (float)random.NextDouble() * info.Width;
-            var y2 = (float)random.NextDouble() * info.Height;
+            center.X = (float)random.NextDouble() * info.Width;
+            center.Y = (float)random.NextDouble() * info.Height;
 
-            x = Math.Min(x1, x2);
-            y = Math.Min(y1, y2);
-            width = Math.Max(x1, x2) - x;
-            height = Math.Max(y1, y2) - y;
+            size.Width = (float)random.NextDouble() * info.Height;
+            size.Height = (float)random.NextDouble() * info.Height;
         }
 
         public Rect Mutate(float percentage)
         {
             var clone = new Rect
             {
-                x = x,
-                y = y,
-                width = width,
-                height = height,
+                center = center,
+                size = size,
                 Color = Color,
                 Alpha = Alpha,
                 Info = Info
             };
             var random = new Random();
 
-            clone.x *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            clone.y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            clone.width *= Math.Abs(1 + percentage - 2 * (float)random.NextDouble() * percentage);
-            clone.height *= Math.Abs(1 + percentage - 2 * (float)random.NextDouble() * percentage);
+            clone.center.X *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.center.Y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            clone.size.Width *= Math.Abs(
+                1 + percentage - 2 * (float)random.NextDouble() * percentage
+            );
+            clone.size.Height *= Math.Abs(
+                1 + percentage - 2 * (float)random.NextDouble() * percentage
+            );
 
             return clone;
         }
