@@ -114,21 +114,27 @@ namespace Image2SVG.Application
         public void PrecalculateChannel(Precalculated channel, int channelIndex)
         {
             ReadOnlySpan<byte> sourcePixels = Source.PeekPixels().GetPixelSpan();
-            long channelSum = 0;
 
-            for (int row = 0; row < Info.Height; row++)
+            long channelRowSum = 0;
+
+            for (int col = 0; col < Info.Width; col++)
+            {
+                int pixelIndex = col * Info.BytesPerPixel;
+                channelRowSum += sourcePixels[pixelIndex + channelIndex];
+                channel.Data[0, col] = channelRowSum;
+            }
+
+            for (int row = 1; row < Info.Height; row++)
             {
                 int rowIndexOffset = row * Info.RowBytes;
-                long channelRowSum = 0;
+                channelRowSum = 0;
 
                 for (int col = 0; col < Info.Width; col++)
                 {
                     int pixelIndex = rowIndexOffset + col * Info.BytesPerPixel;
                     channelRowSum += sourcePixels[pixelIndex + channelIndex];
-                    channel.Data[row, col] = channelSum + channelRowSum;
+                    channel.Data[row, col] = channel.Data[row - 1, col] + channelRowSum;
                 }
-
-                channelSum += channelRowSum;
             }
         }
 
