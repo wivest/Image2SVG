@@ -25,6 +25,9 @@ namespace Image2SVG.Application
             RedChannel = new Precalculated(info);
             GreenChannel = new Precalculated(info);
             BlueChannel = new Precalculated(info);
+            PrecalculateChannel(RedChannel, 0);
+            PrecalculateChannel(GreenChannel, 1);
+            PrecalculateChannel(BlueChannel, 2);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations)
@@ -36,7 +39,7 @@ namespace Image2SVG.Application
             {
                 var shape = new T { Info = Info };
                 shape.RandomizeParameters(Info);
-                shape.Color = AverageColor(Source, shape.ImageBounds).WithAlpha(128);
+                shape.Color = AverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
 
@@ -129,35 +132,19 @@ namespace Image2SVG.Application
             }
         }
 
-        public SKColor AverageColor(SKSurface surface, SKRectI bounds)
+        public SKColor AverageColor(SKRectI bounds)
         {
-            long r = 0;
-            long g = 0;
-            long b = 0;
+            long redSum = RedChannel.GetBoundsValue(bounds);
+            long greenSum = GreenChannel.GetBoundsValue(bounds);
+            long blueSum = BlueChannel.GetBoundsValue(bounds);
 
-            ReadOnlySpan<byte> pixels = surface.PeekPixels().GetPixelSpan();
+            int area = Math.Max(1, bounds.Width * bounds.Height);
 
-            int bytesPerRow = Info.RowBytes;
-            int bytesPerPixel = Info.BytesPerPixel;
+            byte r = (byte)(redSum / area);
+            byte g = (byte)(greenSum / area);
+            byte b = (byte)(blueSum / area);
 
-            for (int y = bounds.Top; y < bounds.Bottom; y++)
-            {
-                var offset = y * bytesPerRow;
-                for (int x = bounds.Left; x < bounds.Right; x++)
-                {
-                    int pixel = offset + x * bytesPerPixel;
-                    r += pixels[pixel];
-                    g += pixels[pixel + 1];
-                    b += pixels[pixel + 2];
-                }
-            }
-
-            int size = Math.Max(bounds.Width * bounds.Height, 1);
-            r /= size;
-            g /= size;
-            b /= size;
-
-            return new SKColor((byte)r, (byte)g, (byte)b);
+            return new SKColor(r, g, b);
         }
     }
 }
