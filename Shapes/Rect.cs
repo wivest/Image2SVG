@@ -30,8 +30,8 @@ namespace Image2SVG.Shapes
             canvas.DrawRect(
                 center.X - size.Width / 2,
                 center.Y - size.Height / 2,
-                center.X + size.Width / 2,
-                center.Y + size.Height / 2,
+                size.Width,
+                size.Height,
                 paint
             );
         }
