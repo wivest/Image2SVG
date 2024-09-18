@@ -76,37 +76,36 @@ namespace Image2SVG.Application
 
         public void PrecalculateDifference()
         {
-            ReadOnlySpan<byte> originalPixels = Source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> sourcePixels = Source.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> currentPixels = Generated.PeekPixels().GetPixelSpan();
 
             int bytesPerRow = Info.RowBytes;
             int bytesPerPixel = Info.BytesPerPixel;
 
-            ImageDifference.Data[0, 0] = CalculatePixelDifference(originalPixels, currentPixels, 0);
+            long differenceRowSum = 0;
 
-            for (int col = 1; col < Info.Width; col++)
+            for (int col = 0; col < Info.Width; col++)
             {
                 int index = col * bytesPerPixel;
-                int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
-                ImageDifference.Data[0, col] = difference + ImageDifference.Data[0, col - 1];
+                differenceRowSum += CalculatePixelDifference(sourcePixels, currentPixels, index);
+                ImageDifference.Data[0, col] = differenceRowSum;
             }
 
             for (int row = 1; row < Info.Height; row++)
             {
-                int offset = row * bytesPerRow;
+                int rowIndexOffset = row * bytesPerRow;
+                differenceRowSum = 0;
 
-                ImageDifference.Data[row, 0] =
-                    CalculatePixelDifference(originalPixels, currentPixels, offset)
-                    + ImageDifference.Data[row - 1, 0];
                 for (int col = 1; col < Info.Width; col++)
                 {
-                    int index = offset + col * bytesPerPixel;
-                    int difference = CalculatePixelDifference(originalPixels, currentPixels, index);
+                    int index = rowIndexOffset + col * bytesPerPixel;
+                    differenceRowSum += CalculatePixelDifference(
+                        sourcePixels,
+                        currentPixels,
+                        index
+                    );
                     ImageDifference.Data[row, col] =
-                        difference
-                        + ImageDifference.Data[row - 1, col]
-                        + ImageDifference.Data[row, col - 1]
-                        - ImageDifference.Data[row - 1, col - 1];
+                        ImageDifference.Data[row - 1, col] + differenceRowSum;
                 }
             }
         }
