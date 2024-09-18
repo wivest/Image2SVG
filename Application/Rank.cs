@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Rank<T> : List<Tuple<T, int>>
+    class Rank<T> : List<Tuple<T, long>>
         where T : IShape<T>, new()
     {
         public void RankShapes(Generator<T> generator, List<T> shapes)
@@ -23,10 +23,10 @@ namespace Image2SVG.Application
                     currentGeneratedCopy,
                     shape.ImageBounds
                 );
-                Add(new Tuple<T, int>(shape, (int)(difference - currentDifference)));
+                Add(new Tuple<T, long>(shape, difference - currentDifference));
             }
 
-            Sort((Tuple<T, int> a, Tuple<T, int> b) => a.Item2.CompareTo(b.Item2));
+            Sort((Tuple<T, long> a, Tuple<T, long> b) => a.Item2.CompareTo(b.Item2));
         }
 
         public List<T> MutateShapes(int mutations)
