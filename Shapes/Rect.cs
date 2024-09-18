@@ -43,7 +43,7 @@ namespace Image2SVG.Shapes
             center.X = (float)random.NextDouble() * info.Width;
             center.Y = (float)random.NextDouble() * info.Height;
 
-            size.Width = (float)random.NextDouble() * info.Height;
+            size.Width = (float)random.NextDouble() * info.Width;
             size.Height = (float)random.NextDouble() * info.Height;
         }
 
