@@ -81,7 +81,7 @@ namespace Image2SVG.Shapes
             element.SetAttribute("width", $"{size.Width}");
             element.SetAttribute("height", $"{size.Height}");
             element.SetAttribute("fill", $"rgb({Color.Red},{Color.Green},{Color.Blue})");
-            element.SetAttribute("fill-opacity", $"{Alpha / 255f}");
+            element.SetAttribute("fill-opacity", $"{Color.Alpha / 255.0f}");
 
             return element;
         }
