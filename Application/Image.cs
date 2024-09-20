@@ -10,6 +10,8 @@ namespace Image2SVG.Application
         private readonly SKSurface generated;
         private readonly Generator<T> generator;
 
+        private List<T> shapes = new();
+
         public Image(string filename)
         {
             SKBitmap bitmap = Resize(filename, 0.5f);
@@ -46,8 +48,11 @@ namespace Image2SVG.Application
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
+
                 T shape = generator.EvolveShapes(50, 5, 5);
                 shape.Draw(generated.Canvas);
+                shapes.Add(shape);
+
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
