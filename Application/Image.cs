@@ -36,10 +36,10 @@ namespace Image2SVG.Application
             return bitmap.Resize(size, SKFilterQuality.High);
         }
 
-        public void SaveTo(string filename)
+        public void SaveTo(string folder, string filename)
         {
             SKImage generatedImage = generated.Snapshot();
-            using var pngStream = new FileStream(filename, FileMode.Create);
+            using var pngStream = new FileStream($"{folder}{filename}.png", FileMode.Create);
             generatedImage.Encode().SaveTo(pngStream);
 
             var svg = new XmlDocument();
@@ -47,7 +47,7 @@ namespace Image2SVG.Application
             root.SetAttribute("width", $"{generator.Info.Width}");
             root.SetAttribute("height", $"{generator.Info.Height}");
             svg.AppendChild(root);
-            using var stream = new FileStream("images/result.svg", FileMode.Create);
+            using var stream = new FileStream($"{folder}{filename}.svg", FileMode.Create);
             svg.Save(stream);
         }
 
