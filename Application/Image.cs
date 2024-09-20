@@ -1,3 +1,4 @@
+using System.Xml;
 using Image2SVG.Shapes;
 using SkiaSharp;
 
@@ -38,8 +39,16 @@ namespace Image2SVG.Application
         public void SaveTo(string filename)
         {
             SKImage generatedImage = generated.Snapshot();
-            using var stream = new FileStream(filename, FileMode.Create);
-            generatedImage.Encode().SaveTo(stream);
+            using var pngStream = new FileStream(filename, FileMode.Create);
+            generatedImage.Encode().SaveTo(pngStream);
+
+            var svg = new XmlDocument();
+            XmlElement root = svg.CreateElement("svg");
+            root.SetAttribute("width", $"{generator.Info.Width}");
+            root.SetAttribute("height", $"{generator.Info.Height}");
+            svg.AppendChild(root);
+            using var stream = new FileStream("images/result.svg", FileMode.Create);
+            svg.Save(stream);
         }
 
         public void Generate(int numberOfShapes)
