@@ -46,6 +46,7 @@ namespace Image2SVG.Application
             XmlElement root = svg.CreateElement("svg");
             root.SetAttribute("width", $"{generator.Info.Width}");
             root.SetAttribute("height", $"{generator.Info.Height}");
+            root.SetAttribute("style", "background-color:white");
             svg.AppendChild(root);
 
             foreach (T shape in shapes)
