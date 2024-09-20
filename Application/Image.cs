@@ -47,6 +47,12 @@ namespace Image2SVG.Application
             root.SetAttribute("width", $"{generator.Info.Width}");
             root.SetAttribute("height", $"{generator.Info.Height}");
             svg.AppendChild(root);
+
+            foreach (T shape in shapes)
+            {
+                root.AppendChild(shape.ToSVG(svg));
+            }
+
             using var stream = new FileStream($"{folder}{filename}.svg", FileMode.Create);
             svg.Save(stream);
         }

@@ -1,3 +1,4 @@
+using System.Xml;
 using SkiaSharp;
 
 namespace Image2SVG.Shapes
@@ -69,6 +70,20 @@ namespace Image2SVG.Shapes
             );
 
             return clone;
+        }
+
+        public XmlElement ToSVG(XmlDocument root)
+        {
+            XmlElement element = root.CreateElement("rect");
+
+            element.SetAttribute("x", $"{center.X - size.Width / 2}");
+            element.SetAttribute("y", $"{center.Y - size.Height / 2}");
+            element.SetAttribute("width", $"{size.Width}");
+            element.SetAttribute("height", $"{size.Height}");
+            element.SetAttribute("fill", $"rgb({Color.Red},{Color.Green},{Color.Blue})");
+            element.SetAttribute("fill-opacity", $"{Alpha / 255f}");
+
+            return element;
         }
     }
 }

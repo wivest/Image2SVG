@@ -1,3 +1,4 @@
+using System.Xml;
 using SkiaSharp;
 
 namespace Image2SVG.Shapes
@@ -25,5 +26,6 @@ namespace Image2SVG.Shapes
         public void Draw(SKCanvas canvas);
         public void RandomizeParameters(SKImageInfo info);
         public T Mutate(float percentage);
+        public XmlElement ToSVG(XmlDocument root);
     }
 }

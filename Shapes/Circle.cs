@@ -1,3 +1,4 @@
+using System.Xml;
 using SkiaSharp;
 
 namespace Image2SVG.Shapes
@@ -58,6 +59,11 @@ namespace Image2SVG.Shapes
             clone.radius *= 1 + (float)random.NextDouble() * percentage;
 
             return clone;
+        }
+
+        public XmlElement ToSVG(XmlDocument root)
+        {
+            throw new NotImplementedException();
         }
     }
 }
