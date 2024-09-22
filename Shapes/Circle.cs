@@ -11,6 +11,7 @@ namespace Image2SVG.Shapes
 
         public byte Alpha { get; set; }
         public SKColor Color { get; set; }
+        public SKPoint Center { get; set; }
 
         public SKImageInfo Info { get; set; }
         public SKRectI Bounds

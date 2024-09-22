@@ -5,11 +5,11 @@ namespace Image2SVG.Shapes
 {
     class Rect : IShape<Rect>
     {
-        private SKPoint center = new();
         private SKSize size = new();
 
         public byte Alpha { get; set; }
         public SKColor Color { get; set; }
+        public SKPoint Center { get; set; }
 
         public SKImageInfo Info { get; set; }
         public SKRectI Bounds
@@ -17,10 +17,10 @@ namespace Image2SVG.Shapes
             get
             {
                 return new SKRectI(
-                    (int)(center.X - size.Width / 2),
-                    (int)(center.Y - size.Height / 2),
-                    (int)(center.X + size.Width / 2),
-                    (int)(center.Y + size.Height / 2)
+                    (int)(Center.X - size.Width / 2),
+                    (int)(Center.Y - size.Height / 2),
+                    (int)(Center.X + size.Width / 2),
+                    (int)(Center.Y + size.Height / 2)
                 );
             }
         }
@@ -29,8 +29,8 @@ namespace Image2SVG.Shapes
         {
             var paint = new SKPaint { Color = Color };
             canvas.DrawRect(
-                center.X - size.Width / 2,
-                center.Y - size.Height / 2,
+                Center.X - size.Width / 2,
+                Center.Y - size.Height / 2,
                 size.Width,
                 size.Height,
                 paint
@@ -41,8 +41,9 @@ namespace Image2SVG.Shapes
         {
             var random = new Random();
 
-            center.X = (float)random.NextDouble() * info.Width;
-            center.Y = (float)random.NextDouble() * info.Height;
+            float x = (float)random.NextDouble() * info.Width;
+            float y = (float)random.NextDouble() * info.Height;
+            Center = new SKPoint(x, y);
 
             size.Width = (float)random.NextDouble() * info.Width;
             size.Height = (float)random.NextDouble() * info.Height;
@@ -52,7 +53,7 @@ namespace Image2SVG.Shapes
         {
             var clone = new Rect
             {
-                center = center,
+                Center = Center,
                 size = size,
                 Color = Color,
                 Alpha = Alpha,
@@ -60,8 +61,9 @@ namespace Image2SVG.Shapes
             };
             var random = new Random();
 
-            clone.center.X *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
-            clone.center.Y *= 1 + percentage - 2 * (float)random.NextDouble() * percentage;
+            float x = clone.Center.X * (1 + (1 - 2 * (float)random.NextDouble()) * percentage);
+            float y = clone.Center.Y * (1 + (1 - 2 * (float)random.NextDouble()) * percentage);
+            clone.Center = new SKPoint(x, y);
             clone.size.Width *= Math.Abs(
                 1 + percentage - 2 * (float)random.NextDouble() * percentage
             );
@@ -76,8 +78,8 @@ namespace Image2SVG.Shapes
         {
             XmlElement element = root.CreateElement("rect");
 
-            element.SetAttribute("x", $"{center.X - size.Width / 2}");
-            element.SetAttribute("y", $"{center.Y - size.Height / 2}");
+            element.SetAttribute("x", $"{Center.X - size.Width / 2}");
+            element.SetAttribute("y", $"{Center.Y - size.Height / 2}");
             element.SetAttribute("width", $"{size.Width}");
             element.SetAttribute("height", $"{size.Height}");
             element.SetAttribute("fill", $"rgb({Color.Red},{Color.Green},{Color.Blue})");
