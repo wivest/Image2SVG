@@ -55,7 +55,6 @@ namespace Image2SVG.Application
                 rank.RemoveRange(samples, rank.Count - samples);
             }
 
-            Console.WriteLine(rank[0].Item1.Bounds.Width * rank[0].Item1.Bounds.Height);
             return rank[0].Item1;
         }
 
@@ -115,7 +114,6 @@ namespace Image2SVG.Application
                     {
                         worstDifference = pixelDifference;
                         worstPoint = new SKPoint(col, row);
-                        Console.WriteLine($"{worstDifference} {worstPoint}");
                     }
                     differenceRowSum += pixelDifference;
                     ImageDifference.Data[row, col] =
