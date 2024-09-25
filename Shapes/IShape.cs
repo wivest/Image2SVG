@@ -25,7 +25,7 @@ namespace Image2SVG.Shapes
         }
 
         public void Draw(SKCanvas canvas);
-        public void RandomizeParameters(SKImageInfo info);
+        public void RandomizeParameters(SKRect area);
         public T Mutate(float percentage);
         public XmlElement ToSVG(XmlDocument root);
     }

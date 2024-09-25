@@ -37,16 +37,16 @@ namespace Image2SVG.Shapes
             );
         }
 
-        public void RandomizeParameters(SKImageInfo info)
+        public void RandomizeParameters(SKRect area)
         {
             var random = new Random();
 
-            float x = (float)random.NextDouble() * info.Width;
-            float y = (float)random.NextDouble() * info.Height;
-            Center = new SKPoint(x, y);
+            float x = (float)random.NextDouble() * area.Width;
+            float y = (float)random.NextDouble() * area.Height;
+            Center = new SKPoint(area.Left + x, area.Top + y);
 
-            size.Width = (float)random.NextDouble() * info.Width;
-            size.Height = (float)random.NextDouble() * info.Height;
+            size.Width = (float)random.NextDouble() * area.Width;
+            size.Height = (float)random.NextDouble() * area.Height;
         }
 
         public Rect Mutate(float percentage)

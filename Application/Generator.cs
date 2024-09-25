@@ -38,7 +38,7 @@ namespace Image2SVG.Application
             for (int i = 0; i < samples * mutations; i++)
             {
                 var shape = new T { Info = Info };
-                shape.RandomizeParameters(Info);
+                shape.RandomizeParameters(Info.Rect);
                 shape.Center = worstPoint;
                 shape.Color = AverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
