@@ -32,14 +32,13 @@ namespace Image2SVG.Application
 
         public T EvolveShapes(int samples, int mutations, int generations)
         {
-            SKPoint worstPoint = PrecalculateDifference();
+            PrecalculateDifference();
 
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
                 var shape = new T { Info = Info };
                 shape.RandomizeParameters(Info.Rect);
-                shape.Center = worstPoint;
                 shape.Color = AverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
@@ -75,29 +74,20 @@ namespace Image2SVG.Application
             return difference;
         }
 
-        public SKPoint PrecalculateDifference()
+        public void PrecalculateDifference()
         {
-            var worstPoint = new SKPoint();
-            int worstDifference = int.MinValue;
             ReadOnlySpan<byte> sourcePixels = Source.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> currentPixels = Generated.PeekPixels().GetPixelSpan();
 
             int bytesPerRow = Info.RowBytes;
             int bytesPerPixel = Info.BytesPerPixel;
 
-            int pixelDifference;
             long differenceRowSum = 0;
 
             for (int col = 0; col < Info.Width; col++)
             {
                 int index = col * bytesPerPixel;
-                pixelDifference = CalculatePixelDifference(sourcePixels, currentPixels, index);
-                if (pixelDifference > worstDifference)
-                {
-                    worstDifference = pixelDifference;
-                    worstPoint = new SKPoint(col, 0);
-                }
-                differenceRowSum += pixelDifference;
+                differenceRowSum += CalculatePixelDifference(sourcePixels, currentPixels, index);
                 ImageDifference.Data[0, col] = differenceRowSum;
             }
 
@@ -109,19 +99,15 @@ namespace Image2SVG.Application
                 for (int col = 0; col < Info.Width; col++)
                 {
                     int index = rowIndexOffset + col * bytesPerPixel;
-                    pixelDifference = CalculatePixelDifference(sourcePixels, currentPixels, index);
-                    if (pixelDifference > worstDifference)
-                    {
-                        worstDifference = pixelDifference;
-                        worstPoint = new SKPoint(col, row);
-                    }
-                    differenceRowSum += pixelDifference;
+                    differenceRowSum += CalculatePixelDifference(
+                        sourcePixels,
+                        currentPixels,
+                        index
+                    );
                     ImageDifference.Data[row, col] =
                         ImageDifference.Data[row - 1, col] + differenceRowSum;
                 }
             }
-
-            return worstPoint;
         }
 
         public void PrecalculateChannel(Precalculated channel, int channelIndex)
