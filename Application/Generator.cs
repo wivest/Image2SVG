@@ -38,7 +38,8 @@ namespace Image2SVG.Application
             for (int i = 0; i < samples * mutations; i++)
             {
                 var shape = new T { Info = Info };
-                shape.RandomizeParameters(Info.Rect);
+                SKRectI area = GetWorstArea(1, 1);
+                shape.RandomizeParameters(area);
                 shape.Color = AverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
@@ -108,6 +109,13 @@ namespace Image2SVG.Application
                         ImageDifference.Data[row - 1, col] + differenceRowSum;
                 }
             }
+        }
+
+        public SKRectI GetWorstArea(int horizontal, int vertical)
+        {
+            var area = new SKRectI(0, 0, Info.Width, Info.Height);
+
+            return area;
         }
 
         public void PrecalculateChannel(Precalculated channel, int channelIndex)
