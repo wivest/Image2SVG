@@ -30,10 +30,10 @@ namespace Image2SVG.Application
             PrecalculateChannel(BlueChannel, 2);
         }
 
-        public T EvolveShapes(int samples, int mutations, int generations)
+        public T EvolveShapes(int samples, int mutations, int generations, int splits)
         {
             PrecalculateDifference();
-            SKRectI area = GetWorstArea(4, 4);
+            SKRectI area = GetWorstArea(splits, splits);
 
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)

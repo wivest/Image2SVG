@@ -65,7 +65,7 @@ namespace Image2SVG.Application
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                T shape = generator.EvolveShapes(50, 20, 5);
+                T shape = generator.EvolveShapes(50, 20, 5, 1 + i / 10);
                 shape.Draw(generated.Canvas);
                 shapes.Add(shape);
 
