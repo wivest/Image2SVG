@@ -16,7 +16,7 @@ namespace Image2SVG.Application
                         shape.ImageBounds
                     );
 
-                    SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
+                    using SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
                     currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
                     shape.Draw(currentGeneratedCopy.Canvas);
                     long difference = CalculateDifference(
