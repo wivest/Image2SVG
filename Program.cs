@@ -16,7 +16,7 @@ if (args.Length < 1)
 string inputFilename = args[0];
 
 var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
-image.Generate(10);
+image.Generate(100);
 image.SaveTo(IMAGE_FOLDER, OUTPUT_FILENAME);
 
 return 0;

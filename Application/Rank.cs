@@ -41,7 +41,7 @@ namespace Image2SVG.Application
                 shapes.Add(shape);
                 for (int i = 0; i < mutations; i++)
                 {
-                    shapes.Add(shape.Mutate(0.1f));
+                    shapes.Add(shape.Mutate(0.75f));
                 }
             }
 

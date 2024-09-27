@@ -33,7 +33,7 @@ namespace Image2SVG.Application
         public T EvolveShapes(int samples, int mutations, int generations)
         {
             PrecalculateDifference();
-            SKRectI area = GetWorstArea(2, 2);
+            SKRectI area = GetWorstArea(4, 4);
 
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
