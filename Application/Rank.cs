@@ -8,23 +8,25 @@ namespace Image2SVG.Application
     {
         public void RankShapes(Generator<T> generator, List<T> shapes)
         {
-            SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
+            Parallel.ForEach(
+                shapes,
+                shape =>
+                {
+                    long currentDifference = generator.ImageDifference.GetBoundsValue(
+                        shape.ImageBounds
+                    );
 
-            foreach (T shape in shapes)
-            {
-                long currentDifference = generator.ImageDifference.GetBoundsValue(
-                    shape.ImageBounds
-                );
-
-                currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
-                shape.Draw(currentGeneratedCopy.Canvas);
-                long difference = CalculateDifference(
-                    generator,
-                    currentGeneratedCopy,
-                    shape.ImageBounds
-                );
-                Add(new Tuple<T, long>(shape, difference - currentDifference));
-            }
+                    SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
+                    currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
+                    shape.Draw(currentGeneratedCopy.Canvas);
+                    long difference = CalculateDifference(
+                        generator,
+                        currentGeneratedCopy,
+                        shape.ImageBounds
+                    );
+                    Add(new Tuple<T, long>(shape, difference - currentDifference));
+                }
+            );
 
             Sort((Tuple<T, long> a, Tuple<T, long> b) => a.Item2.CompareTo(b.Item2));
         }
