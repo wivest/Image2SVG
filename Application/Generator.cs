@@ -33,12 +33,12 @@ namespace Image2SVG.Application
         public T EvolveShapes(int samples, int mutations, int generations)
         {
             PrecalculateDifference();
+            SKRectI area = GetWorstArea(2, 2);
 
             var shapes = new List<T>();
             for (int i = 0; i < samples * mutations; i++)
             {
                 var shape = new T { Info = Info };
-                SKRectI area = GetWorstArea(1, 1);
                 shape.RandomizeParameters(area);
                 shape.Color = AverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
@@ -113,9 +113,29 @@ namespace Image2SVG.Application
 
         public SKRectI GetWorstArea(int horizontal, int vertical)
         {
-            var area = new SKRectI(0, 0, Info.Width, Info.Height);
+            var worstArea = new SKRectI(0, 0, Info.Width, Info.Height);
+            long worstDifference = long.MinValue;
 
-            return area;
+            for (int h = 0; h < horizontal; h++)
+            {
+                int left = Info.Width * h / horizontal;
+                int right = (Info.Width - 1) * (h + 1) / horizontal;
+                for (int v = 0; v < vertical; v++)
+                {
+                    int top = Info.Height * v / vertical;
+                    int bottom = (Info.Height - 1) * (v + 1) / vertical;
+
+                    var rect = new SKRectI(left, top, right, bottom);
+                    long difference = ImageDifference.GetBoundsValue(rect);
+                    if (difference > worstDifference)
+                    {
+                        worstDifference = difference;
+                        worstArea = rect;
+                    }
+                }
+            }
+
+            return worstArea;
         }
 
         public void PrecalculateChannel(Precalculated channel, int channelIndex)
