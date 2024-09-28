@@ -46,16 +46,16 @@ namespace Image2SVG.Application
 
             var rank = new Rank<T>();
             rank.RankShapes(this, shapes);
-            rank.RemoveRange(samples, rank.Count - samples);
+            rank.Ranked.RemoveRange(samples, rank.Ranked.Count - samples);
 
             for (int generation = 1; generation < generations; generation++)
             {
                 shapes = rank.MutateShapes(mutations);
                 rank.RankShapes(this, shapes);
-                rank.RemoveRange(samples, rank.Count - samples);
+                rank.Ranked.RemoveRange(samples, rank.Ranked.Count - samples);
             }
 
-            return rank[0].Item1;
+            return rank.Ranked[0].Shape;
         }
 
         public int CalculatePixelDifference(

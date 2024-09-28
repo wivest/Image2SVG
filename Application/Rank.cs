@@ -3,9 +3,11 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Rank<T> : List<Tuple<T, long>>
+    class Rank<T>
         where T : IShape<T>, new()
     {
+        public List<RankItem<T>> Ranked = new();
+
         public void RankShapes(Generator<T> generator, List<T> shapes)
         {
             Parallel.ForEach(
@@ -24,24 +26,25 @@ namespace Image2SVG.Application
                         currentGeneratedCopy,
                         shape.ImageBounds
                     );
-                    Add(new Tuple<T, long>(shape, difference - currentDifference));
+                    var item = new RankItem<T>(shape, difference - currentDifference);
+                    Ranked.Add(item);
                 }
             );
 
-            Sort((Tuple<T, long> a, Tuple<T, long> b) => a.Item2.CompareTo(b.Item2));
+            Ranked.Sort();
         }
 
         public List<T> MutateShapes(int mutations)
         {
             var shapes = new List<T>();
 
-            foreach (var item in this)
+            foreach (var item in Ranked)
             {
-                T shape = item.Item1;
+                T shape = item.Shape;
                 shapes.Add(shape);
                 for (int i = 0; i < mutations; i++)
                 {
-                    shapes.Add(shape.Mutate(0.75f));
+                    shapes.Add(shape.Mutate(0.5f));
                 }
             }
 
