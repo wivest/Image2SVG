@@ -65,13 +65,19 @@ namespace Image2SVG.Application
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                T shape = generator.EvolveShapes(50, 20, 5, 1 + i / 10);
+                T shape = generator.EvolveShapes(50, 20, 5, GetDegreeOfDetail());
                 shape.Draw(generated.Canvas);
                 shapes.Add(shape);
 
                 stopwatch.Stop();
                 Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
+        }
+
+        private int GetDegreeOfDetail()
+        {
+            int countSqrt = (int)Math.Pow(shapes.Count, 0.5);
+            return Math.Max(1, countSqrt);
         }
     }
 }
