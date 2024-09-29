@@ -10,6 +10,8 @@ namespace Image2SVG.Application
 
         public void RankShapes(Generator<T> generator, List<T> shapes)
         {
+            Ranked.EnsureCapacity(Ranked.Count + shapes.Count);
+
             Parallel.ForEach(
                 shapes,
                 shape =>
