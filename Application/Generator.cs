@@ -72,7 +72,7 @@ namespace Image2SVG.Application
                 difference += Math.Abs(originalPixels[i] - currentPixels[i]);
             }
 
-            return difference;
+            return difference * difference;
         }
 
         public void PrecalculateDifference()
