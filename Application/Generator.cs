@@ -69,10 +69,11 @@ namespace Image2SVG.Application
             for (int channel = 0; channel < Info.BytesPerPixel; channel++)
             {
                 int i = pixelIndex + channel;
-                difference += Math.Abs(originalPixels[i] - currentPixels[i]);
+                int pixelDifference = Math.Abs(originalPixels[i] - currentPixels[i]);
+                difference += pixelDifference * pixelDifference;
             }
 
-            return difference * difference;
+            return difference;
         }
 
         public void PrecalculateDifference()
