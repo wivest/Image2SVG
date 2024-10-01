@@ -25,9 +25,9 @@ namespace Image2SVG.Application
             RedChannel = new Precalculated(info);
             GreenChannel = new Precalculated(info);
             BlueChannel = new Precalculated(info);
-            PrecalculateChannel(RedChannel, 0);
+            PrecalculateChannel(RedChannel, 2);
             PrecalculateChannel(GreenChannel, 1);
-            PrecalculateChannel(BlueChannel, 2);
+            PrecalculateChannel(BlueChannel, 0);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations, int splits)
