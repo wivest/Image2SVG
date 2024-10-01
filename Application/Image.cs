@@ -70,14 +70,24 @@ namespace Image2SVG.Application
                 shapes.Add(shape);
 
                 stopwatch.Stop();
-                Console.WriteLine($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
+                ClearLine();
+                Console.Write($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
+            ClearLine();
         }
 
         private int GetDegreeOfDetail()
         {
             int countSqrt = (int)Math.Pow(shapes.Count, 0.5);
             return Math.Max(1, countSqrt);
+        }
+
+        private static void ClearLine()
+        {
+            int currentLine = Console.CursorTop;
+            Console.SetCursorPosition(0, currentLine);
+            Console.Write(new string(' ', Console.BufferWidth));
+            Console.SetCursorPosition(0, currentLine);
         }
     }
 }
