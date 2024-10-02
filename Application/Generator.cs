@@ -127,7 +127,8 @@ namespace Image2SVG.Application
                     int bottom = (Info.Height - 1) * (v + 1) / vertical;
 
                     var rect = new SKRectI(left, top, right, bottom);
-                    long difference = ImageDifference.GetBoundsValue(rect);
+                    long difference =
+                        ImageDifference.GetBoundsValue(rect) / (rect.Width * rect.Height);
                     if (difference > worstDifference)
                     {
                         worstDifference = difference;
