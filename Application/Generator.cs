@@ -52,7 +52,8 @@ namespace Image2SVG.Application
             {
                 shapes = rank.MutateShapes(mutations);
                 rank.RankShapes(this, shapes);
-                rank.Ranked.RemoveRange(samples, rank.Ranked.Count - samples);
+                int shapesLeft = Math.Max(1, samples / generation);
+                rank.Ranked.RemoveRange(shapesLeft, rank.Ranked.Count - shapesLeft);
             }
 
             return rank.Ranked[0].Shape;

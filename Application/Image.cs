@@ -15,7 +15,7 @@ namespace Image2SVG.Application
 
         public Image(string filename)
         {
-            SKBitmap bitmap = Resize(filename, 0.25f);
+            SKBitmap bitmap = Resize(filename, 0.2f);
             source = SKSurface.Create(bitmap.Info);
             source.Canvas.DrawBitmap(bitmap, 0, 0);
 
@@ -65,7 +65,7 @@ namespace Image2SVG.Application
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                T shape = generator.EvolveShapes(50, 20, 5, GetDegreeOfDetail());
+                T shape = generator.EvolveShapes(50, 10, 50, GetDegreeOfDetail());
                 shape.Draw(generated.Canvas);
                 shapes.Add(shape);
 
