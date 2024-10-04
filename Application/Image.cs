@@ -26,6 +26,10 @@ namespace Image2SVG.Application
 
         public SKBitmap Resize(string filename, float scale)
         {
+            if (!File.Exists(filename))
+            {
+                throw new FileLoadException("File does not exist");
+            }
             SKImage source = SKImage.FromEncodedData(filename);
             SKBitmap bitmap = SKBitmap.Decode(filename);
             var size = source.Info.WithSize(
