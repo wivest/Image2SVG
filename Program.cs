@@ -7,6 +7,9 @@ Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 const string IMAGE_FOLDER = "images/";
 const string OUTPUT_FILENAME = "result";
 
+Directory.CreateDirectory(IMAGE_FOLDER);
+Directory.CreateDirectory(IMAGE_FOLDER + Image<Rect>.GENERATED_FOLDER);
+
 if (args.Length < 1)
 {
     Console.WriteLine("No input file specified.");

@@ -7,7 +7,7 @@ namespace Image2SVG.Application
     class Image<T>
         where T : IShape<T>, new()
     {
-        const string GENERATED_FOLDER = "result/";
+        public const string GENERATED_FOLDER = "result/";
 
         private readonly SKSurface source;
         private readonly SKSurface generated;
