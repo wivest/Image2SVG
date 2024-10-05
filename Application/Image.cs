@@ -7,6 +7,8 @@ namespace Image2SVG.Application
     class Image<T>
         where T : IShape<T>, new()
     {
+        const string GENERATED_FOLDER = "result/";
+
         private readonly SKSurface source;
         private readonly SKSurface generated;
         private readonly Generator<T> generator;
@@ -43,7 +45,10 @@ namespace Image2SVG.Application
         public void SaveTo(string folder, string filename)
         {
             SKImage generatedImage = generated.Snapshot();
-            using var pngStream = new FileStream($"{folder}{filename}.png", FileMode.Create);
+            using var pngStream = new FileStream(
+                $"{folder}{GENERATED_FOLDER}{filename}.png",
+                FileMode.Create
+            );
             generatedImage.Encode().SaveTo(pngStream);
 
             var svg = new XmlDocument();
