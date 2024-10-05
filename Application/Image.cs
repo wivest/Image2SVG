@@ -63,7 +63,10 @@ namespace Image2SVG.Application
                 root.AppendChild(shape.ToSVG(svg));
             }
 
-            using var stream = new FileStream($"{folder}{filename}.svg", FileMode.Create);
+            using var stream = new FileStream(
+                $"{folder}{GENERATED_FOLDER}{filename}.svg",
+                FileMode.Create
+            );
             svg.Save(stream);
         }
 
