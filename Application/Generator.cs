@@ -8,10 +8,11 @@ namespace Image2SVG.Application
     {
         public readonly SKImageInfo Info;
         public readonly SKSurface Source;
+        public readonly SKSurface BlurrySource;
         public readonly SKSurface Generated;
 
         public readonly Precalculated ImageDifference;
-        public readonly AverageColor AverageColor;
+        public readonly AverageColor BaseColor;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -20,7 +21,11 @@ namespace Image2SVG.Application
             Generated = generated;
 
             ImageDifference = new Precalculated(info);
-            AverageColor = new AverageColor(Info, Source);
+            BlurrySource = SKSurface.Create(info);
+            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(2, 2) };
+            BlurrySource.Canvas.DrawSurface(source, 0, 0, blur);
+
+            BaseColor = new AverageColor(info, source);
         }
 
         public T EvolveShapes(int samples, int mutations, int generations, int splits)
@@ -33,7 +38,7 @@ namespace Image2SVG.Application
             {
                 var shape = new T { Info = Info };
                 shape.RandomizeParameters(area);
-                shape.Color = AverageColor.GetAverageColor(shape.ImageBounds).WithAlpha(128);
+                shape.Color = BaseColor.GetAverageColor(shape.ImageBounds).WithAlpha(128);
                 shapes.Add(shape);
             }
 
