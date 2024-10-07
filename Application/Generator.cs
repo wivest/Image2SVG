@@ -77,7 +77,7 @@ namespace Image2SVG.Application
 
         public void PrecalculateDifference()
         {
-            ReadOnlySpan<byte> sourcePixels = Source.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> blurrySourcePixels = BlurrySource.PeekPixels().GetPixelSpan();
             ReadOnlySpan<byte> currentPixels = Generated.PeekPixels().GetPixelSpan();
 
             int bytesPerRow = Info.RowBytes;
@@ -88,7 +88,11 @@ namespace Image2SVG.Application
             for (int col = 0; col < Info.Width; col++)
             {
                 int index = col * bytesPerPixel;
-                differenceRowSum += CalculatePixelDifference(sourcePixels, currentPixels, index);
+                differenceRowSum += CalculatePixelDifference(
+                    blurrySourcePixels,
+                    currentPixels,
+                    index
+                );
                 ImageDifference.Data[0, col] = differenceRowSum;
             }
 
@@ -101,7 +105,7 @@ namespace Image2SVG.Application
                 {
                     int index = rowIndexOffset + col * bytesPerPixel;
                     differenceRowSum += CalculatePixelDifference(
-                        sourcePixels,
+                        blurrySourcePixels,
                         currentPixels,
                         index
                     );
