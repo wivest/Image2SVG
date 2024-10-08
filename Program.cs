@@ -20,7 +20,14 @@ string inputFilename = args[0];
 
 int shapes = 100;
 if (args.Length >= 2)
-    shapes = int.Parse(args[1]);
+{
+    bool parsed = int.TryParse(args[1], out shapes);
+    if (!parsed)
+    {
+        Console.WriteLine("Shape count is not a number.");
+        return 1;
+    }
+}
 
 var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
 image.Generate(shapes);
