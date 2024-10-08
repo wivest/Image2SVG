@@ -77,8 +77,12 @@ namespace Image2SVG.Application
 
         public void PrecalculateDifference()
         {
+            using SKSurface BlurryGenerated = SKSurface.Create(Info);
+            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(2, 2) };
+            BlurryGenerated.Canvas.DrawSurface(Generated, 0, 0, blur);
+
             ReadOnlySpan<byte> blurrySourcePixels = BlurrySource.PeekPixels().GetPixelSpan();
-            ReadOnlySpan<byte> currentPixels = Generated.PeekPixels().GetPixelSpan();
+            ReadOnlySpan<byte> currentPixels = BlurryGenerated.PeekPixels().GetPixelSpan();
 
             int bytesPerRow = Info.RowBytes;
             int bytesPerPixel = Info.BytesPerPixel;
