@@ -18,8 +18,12 @@ if (args.Length < 1)
 
 string inputFilename = args[0];
 
+int shapes = 100;
+if (args.Length >= 2)
+    shapes = int.Parse(args[1]);
+
 var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
-image.Generate(100);
+image.Generate(shapes);
 image.SaveTo(IMAGE_FOLDER, OUTPUT_FILENAME);
 
 return 0;
