@@ -6,6 +6,8 @@ namespace Image2SVG.Application
     class Generator<T>
         where T : IShape<T>, new()
     {
+        public float BlurValue = 1;
+
         public readonly SKImageInfo Info;
         public readonly SKSurface Source;
         public readonly SKSurface BlurrySource;
@@ -22,7 +24,7 @@ namespace Image2SVG.Application
 
             ImageDifference = new Precalculated(info);
             BlurrySource = SKSurface.Create(info);
-            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(2, 2) };
+            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(BlurValue, BlurValue) };
             BlurrySource.Canvas.DrawSurface(source, 0, 0, blur);
 
             BaseColor = new AverageColor(info, source);
@@ -78,7 +80,7 @@ namespace Image2SVG.Application
         public void PrecalculateDifference()
         {
             using SKSurface BlurryGenerated = SKSurface.Create(Info);
-            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(2, 2) };
+            var blur = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(BlurValue, BlurValue) };
             BlurryGenerated.Canvas.DrawSurface(Generated, 0, 0, blur);
 
             ReadOnlySpan<byte> blurrySourcePixels = BlurrySource.PeekPixels().GetPixelSpan();
