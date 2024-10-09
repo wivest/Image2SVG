@@ -44,14 +44,14 @@ namespace Image2SVG.Application
                 shapes.Add(shape);
             }
 
-            var rank = new Rank<T>();
-            rank.RankShapes(this, shapes);
+            var rank = new Rank<T>(this);
+            rank.RankShapes(shapes);
             rank.Ranked.RemoveRange(samples, rank.Ranked.Count - samples);
 
             for (int generation = 1; generation < generations; generation++)
             {
                 shapes = rank.MutateShapes(mutations);
-                rank.RankShapes(this, shapes);
+                rank.RankShapes(shapes);
                 int shapesLeft = Math.Max(1, samples / generation);
                 rank.Ranked.RemoveRange(shapesLeft, rank.Ranked.Count - shapesLeft);
             }

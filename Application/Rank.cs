@@ -8,7 +8,14 @@ namespace Image2SVG.Application
     {
         public List<RankItem<T>> Ranked = new();
 
-        public void RankShapes(Generator<T> generator, List<T> shapes)
+        private Generator<T> generator;
+
+        public Rank(Generator<T> generator)
+        {
+            this.generator = generator;
+        }
+
+        public void RankShapes(List<T> shapes)
         {
             Ranked.EnsureCapacity(Ranked.Count + shapes.Count);
 
@@ -23,11 +30,7 @@ namespace Image2SVG.Application
                     using SKSurface currentGeneratedCopy = SKSurface.Create(generator.Info);
                     currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
                     shape.Draw(currentGeneratedCopy.Canvas);
-                    long difference = CalculateDifference(
-                        generator,
-                        currentGeneratedCopy,
-                        shape.ImageBounds
-                    );
+                    long difference = CalculateDifference(currentGeneratedCopy, shape.ImageBounds);
                     var item = new RankItem<T>(shape, difference - currentDifference);
                     Ranked.Add(item);
                 }
@@ -53,7 +56,7 @@ namespace Image2SVG.Application
             return shapes;
         }
 
-        private long CalculateDifference(Generator<T> generator, SKSurface current, SKRectI bounds)
+        private long CalculateDifference(SKSurface current, SKRectI bounds)
         {
             long difference = 0;
 
