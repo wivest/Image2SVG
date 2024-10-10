@@ -7,7 +7,6 @@ namespace Image2SVG.Shapes
     {
         private SKSize size = new();
 
-        public byte Alpha { get; set; }
         public SKColor Color { get; set; }
         public SKPoint Center { get; set; }
 
@@ -56,7 +55,6 @@ namespace Image2SVG.Shapes
                 Center = Center,
                 size = size,
                 Color = Color,
-                Alpha = Alpha,
                 Info = Info
             };
             var random = new Random();
