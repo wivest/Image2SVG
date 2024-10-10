@@ -40,8 +40,8 @@ namespace Image2SVG.Shapes
         {
             var random = new Random();
 
-            center.X = (float)random.NextDouble() * area.Width;
-            center.Y = (float)random.NextDouble() * area.Height;
+            center.X = area.Left + (float)random.NextDouble() * area.Width;
+            center.Y = area.Top + (float)random.NextDouble() * area.Height;
 
             size.Width = (float)random.NextDouble() * area.Width;
             size.Height = (float)random.NextDouble() * area.Height;
