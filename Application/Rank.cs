@@ -49,7 +49,11 @@ namespace Image2SVG.Application
                 shapes.Add(shape);
                 for (int i = 0; i < mutations; i++)
                 {
-                    shapes.Add(shape.Mutate(0.5f));
+                    T mutatedShape = shape.Mutate(0.5f);
+                    mutatedShape.Color = generator
+                        .BaseColor.GetAverageColor(mutatedShape.ImageBounds)
+                        .WithAlpha(generator.Shapes.Opacity);
+                    shapes.Add(mutatedShape);
                 }
             }
 
