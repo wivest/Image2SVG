@@ -29,8 +29,16 @@ if (args.Length >= 2)
     }
 }
 
-var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
-image.Generate(shapes);
-image.SaveTo(IMAGE_FOLDER, OUTPUT_FILENAME);
+try
+{
+    var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
+    image.Generate(shapes);
+    image.SaveTo(IMAGE_FOLDER, OUTPUT_FILENAME);
+}
+catch (FileLoadException)
+{
+    Console.WriteLine("Wrong file name.");
+    return 1;
+}
 
 return 0;
