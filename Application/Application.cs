@@ -2,8 +2,16 @@ namespace Image2SVG.Application
 {
     class Application
     {
-        private static readonly DirectoryInfo loadFolder = new("images/");
+        private const string IMAGES_DIRECTORY = "images";
+        private const string SAVE_DIRECTORY = "result";
 
-        public Application(string[] args) { }
+        private readonly DirectoryInfo loadFolder = new(IMAGES_DIRECTORY);
+        private readonly DirectoryInfo saveFolder;
+
+        public Application(string[] args)
+        {
+            loadFolder.Create();
+            saveFolder = loadFolder.CreateSubdirectory(SAVE_DIRECTORY);
+        }
     }
 }
