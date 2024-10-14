@@ -4,8 +4,6 @@ using Image2SVG.Shapes;
 
 Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-const string OUTPUT_FILENAME = "result";
-
 var application = new Application(args);
 
 if (args.Length < 1)
@@ -14,7 +12,7 @@ if (args.Length < 1)
     return 1;
 }
 
-string inputFilename = args[0];
+string imageFilename = args[0];
 
 int shapes = 100;
 if (args.Length >= 2)
@@ -29,9 +27,9 @@ if (args.Length >= 2)
 
 try
 {
-    var image = new Image<Rect>(application.LoadFolder, inputFilename);
+    var image = new Image<Rect>(application.LoadFolder, imageFilename);
     image.Generate(shapes);
-    image.SaveTo(application.SaveFolder, OUTPUT_FILENAME);
+    image.SaveTo(application.SaveFolder, imageFilename);
 }
 catch (FileLoadException)
 {
