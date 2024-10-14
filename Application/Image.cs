@@ -15,9 +15,10 @@ namespace Image2SVG.Application
 
         private List<T> shapes = new();
 
-        public Image(string filename)
+        public Image(DirectoryInfo directory, string filename)
         {
-            SKBitmap bitmap = Resize(filename, 0.2f);
+            string path = Path.Join(directory.FullName, filename);
+            SKBitmap bitmap = Resize(path, 0.2f);
             source = SKSurface.Create(bitmap.Info);
             source.Canvas.DrawBitmap(bitmap, 0, 0);
 
@@ -42,11 +43,11 @@ namespace Image2SVG.Application
             return bitmap.Resize(size, SKFilterQuality.High);
         }
 
-        public void SaveTo(string folder, string filename)
+        public void SaveTo(DirectoryInfo directory, string filename)
         {
             SKImage generatedImage = generated.Snapshot();
             using var pngStream = new FileStream(
-                $"{folder}{GENERATED_FOLDER}{filename}.png",
+                $"{directory.FullName}/{filename}.png",
                 FileMode.Create
             );
             generatedImage.Encode().SaveTo(pngStream);
@@ -64,7 +65,7 @@ namespace Image2SVG.Application
             }
 
             using var stream = new FileStream(
-                $"{folder}{GENERATED_FOLDER}{filename}.svg",
+                $"{directory.FullName}/{filename}.svg",
                 FileMode.Create
             );
             svg.Save(stream);

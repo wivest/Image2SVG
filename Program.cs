@@ -4,11 +4,9 @@ using Image2SVG.Shapes;
 
 Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-const string IMAGE_FOLDER = "images/";
 const string OUTPUT_FILENAME = "result";
 
-Directory.CreateDirectory(IMAGE_FOLDER);
-Directory.CreateDirectory(IMAGE_FOLDER + Image<Rect>.GENERATED_FOLDER);
+var application = new Application(args);
 
 if (args.Length < 1)
 {
@@ -31,9 +29,9 @@ if (args.Length >= 2)
 
 try
 {
-    var image = new Image<Rect>(IMAGE_FOLDER + inputFilename);
+    var image = new Image<Rect>(application.LoadFolder, inputFilename);
     image.Generate(shapes);
-    image.SaveTo(IMAGE_FOLDER, OUTPUT_FILENAME);
+    image.SaveTo(application.SaveFolder, OUTPUT_FILENAME);
 }
 catch (FileLoadException)
 {
