@@ -18,6 +18,8 @@ namespace Image2SVG.Application
             string filename = args[0];
             string path = Path.Combine(LoadFolder.FullName, filename);
             ImageFile = new(path);
+            if (!ImageFile.Exists)
+                throw new FileNotFoundException();
         }
     }
 }

@@ -23,17 +23,16 @@ if (args.Length >= 2)
     }
 }
 
-var application = new Application(args);
-
 try
 {
+    var application = new Application(args);
     var image = new Image<Rect>(application.ImageFile);
     image.Generate(shapes);
     image.SaveTo(application.SaveFolder, imageFilename);
 }
-catch (FileLoadException)
+catch (FileNotFoundException)
 {
-    Console.WriteLine("Wrong file name.");
+    Console.WriteLine("File not found.");
     return 1;
 }
 
