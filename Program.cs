@@ -4,8 +4,6 @@ using Image2SVG.Shapes;
 
 Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
-var application = new Application(args);
-
 if (args.Length < 1)
 {
     Console.WriteLine("No input file specified.");
@@ -24,6 +22,8 @@ if (args.Length >= 2)
         return 1;
     }
 }
+
+var application = new Application(args);
 
 try
 {
