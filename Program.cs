@@ -27,7 +27,7 @@ var application = new Application(args);
 
 try
 {
-    var image = new Image<Rect>(application.LoadFolder, imageFilename);
+    var image = new Image<Rect>(application.ImageFile);
     image.Generate(shapes);
     image.SaveTo(application.SaveFolder, imageFilename);
 }

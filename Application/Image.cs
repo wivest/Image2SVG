@@ -13,10 +13,9 @@ namespace Image2SVG.Application
 
         private List<T> shapes = new();
 
-        public Image(DirectoryInfo directory, string filename)
+        public Image(FileInfo fileInfo)
         {
-            string path = Path.Join(directory.FullName, filename);
-            SKBitmap bitmap = Resize(path, 0.2f);
+            SKBitmap bitmap = Resize(fileInfo.FullName, 0.2f);
             source = SKSurface.Create(bitmap.Info);
             source.Canvas.DrawBitmap(bitmap, 0, 0);
 
