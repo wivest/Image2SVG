@@ -7,7 +7,8 @@ namespace Image2SVG.Application
 
         public DirectoryInfo LoadFolder { get; protected set; }
         public DirectoryInfo SaveFolder { get; protected set; }
-        public FileInfo ImageFile { get; protected set; }
+
+        private string filename;
 
         public Application(string[] args)
         {
@@ -15,11 +16,14 @@ namespace Image2SVG.Application
             LoadFolder.Create();
             SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
 
-            string filename = args[0];
+            filename = args[0];
+        }
+
+        public bool TryLoadFile(out FileInfo file)
+        {
             string path = Path.Combine(LoadFolder.FullName, filename);
-            ImageFile = new(path);
-            if (!ImageFile.Exists)
-                throw new FileNotFoundException();
+            file = new FileInfo(path);
+            return file.Exists;
         }
     }
 }

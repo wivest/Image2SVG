@@ -23,17 +23,16 @@ if (args.Length >= 2)
     }
 }
 
-try
-{
-    var application = new Application(args);
-    var image = new Image<Rect>(application.ImageFile);
-    image.Generate(shapes);
-    image.SaveTo(application.SaveFolder, imageFilename);
-}
-catch (FileNotFoundException)
+var application = new Application(args);
+bool loaded = application.TryLoadFile(out FileInfo file);
+if (!loaded)
 {
     Console.WriteLine("File not found.");
     return 1;
 }
+
+var image = new Image<Rect>(file);
+image.Generate(shapes);
+image.SaveTo(application.SaveFolder, imageFilename);
 
 return 0;
