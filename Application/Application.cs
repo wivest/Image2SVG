@@ -18,7 +18,21 @@ namespace Image2SVG.Application
             LoadFolder.Create();
             SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
 
-            filename = args[0];
+            var filenameArgument = new Argument<string>(
+                name: "file",
+                description: "Load specified file."
+            );
+
+            var root = new RootCommand("Translate raster image into .svg alterantive.");
+            root.AddArgument(filenameArgument);
+            root.SetHandler(
+                (file) =>
+                {
+                    filename = file;
+                },
+                filenameArgument
+            );
+            root.Invoke(args);
         }
 
         public bool TryLoadFile(out FileInfo file)
