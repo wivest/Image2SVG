@@ -11,7 +11,7 @@ namespace Image2SVG.Application
         public DirectoryInfo SaveFolder { get; protected set; }
         public int ShapesCount { get; protected set; }
 
-        private string filename;
+        public string Filename;
 
         public Application(string[] args)
         {
@@ -35,7 +35,7 @@ namespace Image2SVG.Application
             root.SetHandler(
                 (file, count) =>
                 {
-                    filename = file;
+                    Filename = file;
                     ShapesCount = count;
                 },
                 filenameArgument,
@@ -46,7 +46,7 @@ namespace Image2SVG.Application
 
         public bool TryLoadFile(out FileInfo file)
         {
-            string path = Path.Combine(LoadFolder.FullName, filename);
+            string path = Path.Combine(LoadFolder.FullName, Filename);
             file = new FileInfo(path);
             return file.Exists;
         }
