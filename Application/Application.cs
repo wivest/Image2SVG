@@ -22,15 +22,22 @@ namespace Image2SVG.Application
                 name: "file",
                 description: "Load specified file."
             );
+            var shapesCountOption = new Option<int>(
+                name: "count",
+                description: "Count of generated shapes",
+                getDefaultValue: () => 100
+            );
 
             var root = new RootCommand("Translate raster image into .svg alterantive.");
             root.AddArgument(filenameArgument);
+            root.AddOption(shapesCountOption);
             root.SetHandler(
-                (file) =>
+                (file, count) =>
                 {
                     filename = file;
                 },
-                filenameArgument
+                filenameArgument,
+                shapesCountOption
             );
             root.Invoke(args);
         }
