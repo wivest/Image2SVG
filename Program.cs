@@ -32,7 +32,7 @@ if (!loaded)
 }
 
 var image = new Image<Rect>(file);
-image.Generate(shapes);
+image.Generate(application.ShapesCount);
 image.SaveTo(application.SaveFolder, imageFilename);
 
 return 0;

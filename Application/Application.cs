@@ -9,6 +9,7 @@ namespace Image2SVG.Application
 
         public DirectoryInfo LoadFolder { get; protected set; }
         public DirectoryInfo SaveFolder { get; protected set; }
+        public int ShapesCount { get; protected set; }
 
         private string filename;
 
@@ -35,6 +36,7 @@ namespace Image2SVG.Application
                 (file, count) =>
                 {
                     filename = file;
+                    ShapesCount = count;
                 },
                 filenameArgument,
                 shapesCountOption
