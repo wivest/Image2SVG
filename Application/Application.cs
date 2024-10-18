@@ -24,7 +24,7 @@ namespace Image2SVG.Application
                 description: "Load specified file."
             );
             var shapesCountOption = new Option<int>(
-                name: "count",
+                name: "--count",
                 description: "Count of generated shapes.",
                 getDefaultValue: () => 100
             );
