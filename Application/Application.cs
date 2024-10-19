@@ -32,15 +32,7 @@ namespace Image2SVG.Application
             var root = new RootCommand("Translate raster image into .svg alterantive.");
             root.AddArgument(filenameArgument);
             root.AddOption(shapesCountOption);
-            root.SetHandler(
-                (file, count) =>
-                {
-                    Filename = file;
-                    ShapesCount = count;
-                },
-                filenameArgument,
-                shapesCountOption
-            );
+            root.SetHandler(AssignParameters, filenameArgument, shapesCountOption);
             root.Invoke(args);
         }
 
@@ -49,6 +41,12 @@ namespace Image2SVG.Application
             string path = Path.Combine(LoadFolder.FullName, Filename);
             file = new FileInfo(path);
             return file.Exists;
+        }
+
+        private void AssignParameters(string filename, int count)
+        {
+            Filename = filename;
+            ShapesCount = count;
         }
     }
 }
