@@ -22,6 +22,11 @@ namespace Image2SVG.Application
                 name: "file",
                 description: "Load specified file."
             );
+            fileArgument.AddValidator(result =>
+            {
+                if (!result.GetValueForArgument(fileArgument).Exists)
+                    result.ErrorMessage = "File doesn't exist.";
+            });
             var shapesCountOption = new Option<int>(
                 name: "--count",
                 description: "Count of generated shapes.",
