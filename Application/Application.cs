@@ -8,6 +8,7 @@ namespace Image2SVG.Application
         private const string SAVE_DIRECTORY = "result";
 
         public DirectoryInfo LoadFolder { get; protected set; }
+        public FileInfo LoadFile { get; protected set; }
         public DirectoryInfo SaveFolder { get; protected set; }
         public int ShapesCount { get; protected set; }
 
@@ -36,11 +37,11 @@ namespace Image2SVG.Application
             root.Invoke(args);
         }
 
-        public bool TryLoadFile(out FileInfo file)
+        public bool TryLoadFile()
         {
             string path = Path.Combine(LoadFolder.FullName, Filename);
-            file = new FileInfo(path);
-            return file.Exists;
+            LoadFile = new FileInfo(path);
+            return LoadFile.Exists;
         }
 
         private void AssignParameters(string filename, int count)
