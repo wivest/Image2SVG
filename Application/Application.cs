@@ -12,15 +12,13 @@ namespace Image2SVG.Application
         public DirectoryInfo SaveFolder { get; protected set; }
         public int ShapesCount { get; protected set; }
 
-        public string Filename;
-
         public Application(string[] args)
         {
             LoadFolder = new(IMAGES_DIRECTORY);
             LoadFolder.Create();
             SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
 
-            var filenameArgument = new Argument<string>(
+            var fileArgument = new Argument<FileInfo>(
                 name: "file",
                 description: "Load specified file."
             );
@@ -31,22 +29,16 @@ namespace Image2SVG.Application
             );
 
             var root = new RootCommand("Translate raster image into .svg alterantive.");
-            root.AddArgument(filenameArgument);
+            root.AddArgument(fileArgument);
             root.AddOption(shapesCountOption);
-            root.SetHandler(AssignParameters, filenameArgument, shapesCountOption);
+            root.SetHandler(AssignParameters, fileArgument, shapesCountOption);
             root.Invoke(args);
         }
 
-        public bool TryLoadFile()
+        private void AssignParameters(FileInfo file, int count)
         {
-            string path = Path.Combine(LoadFolder.FullName, Filename);
+            string path = Path.Combine(LoadFolder.FullName, file.Name);
             LoadFile = new FileInfo(path);
-            return LoadFile.Exists;
-        }
-
-        private void AssignParameters(string filename, int count)
-        {
-            Filename = filename;
             ShapesCount = count;
         }
     }
