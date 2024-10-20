@@ -33,8 +33,7 @@ namespace Image2SVG.Application
             fileArgument.AddValidator(result =>
             {
                 FileInfo single = result.GetValueForArgument(fileArgument);
-                string path = Path.Combine(LoadFolder.FullName, single.Name);
-                var file = new FileInfo(path);
+                var file = new FileInfo(GetFilePath(single.Name));
                 if (!file.Exists)
                     result.ErrorMessage = "File doesn't exist.";
             });
@@ -92,13 +91,17 @@ namespace Image2SVG.Application
             int generations
         )
         {
-            string path = Path.Combine(LoadFolder.FullName, file.Name);
-            LoadFile = new FileInfo(path);
+            LoadFile = new FileInfo(GetFilePath(file.Name));
             ShapesCount = count;
             Scale = scale;
             Samples = samples;
             Mutations = mutations;
             Generations = generations;
+        }
+
+        private string GetFilePath(string filename)
+        {
+            return Path.Combine(LoadFolder.FullName, filename);
         }
     }
 }
