@@ -32,7 +32,10 @@ namespace Image2SVG.Application
             );
             fileArgument.AddValidator(result =>
             {
-                if (!result.GetValueForArgument(fileArgument).Exists)
+                FileInfo single = result.GetValueForArgument(fileArgument);
+                string path = Path.Combine(LoadFolder.FullName, single.Name);
+                var file = new FileInfo(path);
+                if (!file.Exists)
                     result.ErrorMessage = "File doesn't exist.";
             });
             var shapesCountOption = new Option<int>(
