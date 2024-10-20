@@ -13,9 +13,9 @@ namespace Image2SVG.Application
 
         private List<T> shapes = new();
 
-        public Image(FileInfo fileInfo)
+        public Image(FileInfo fileInfo, float scale)
         {
-            SKBitmap bitmap = Resize(fileInfo.FullName, 0.2f);
+            SKBitmap bitmap = Resize(fileInfo.FullName, scale);
             source = SKSurface.Create(bitmap.Info);
             source.Canvas.DrawBitmap(bitmap, 0, 0);
 
@@ -64,14 +64,19 @@ namespace Image2SVG.Application
             svg.Save(stream);
         }
 
-        public void Generate(int numberOfShapes)
+        public void Generate(int numberOfShapes, int samples, int mutations, int generations)
         {
             for (int i = 0; i < numberOfShapes; i++)
             {
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                T shape = generator.EvolveShapes(50, 10, 50, GetDegreeOfDetail());
+                T shape = generator.EvolveShapes(
+                    samples,
+                    mutations,
+                    generations,
+                    GetDegreeOfDetail()
+                );
                 shape.Draw(generated.Canvas);
                 shapes.Add(shape);
 

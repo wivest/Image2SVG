@@ -12,6 +12,10 @@ namespace Image2SVG.Application
 
         public FileInfo? LoadFile { get; protected set; }
         public int ShapesCount { get; protected set; }
+        public float Scale { get; protected set; }
+        public int Samples { get; protected set; }
+        public int Mutations { get; protected set; }
+        public int Generations { get; protected set; }
 
         public Application()
         {
@@ -36,19 +40,62 @@ namespace Image2SVG.Application
                 description: "Count of generated shapes.",
                 getDefaultValue: () => 100
             );
+            var scaleOption = new Option<float>(
+                name: "--scale",
+                description: "Count of generated shapes.",
+                getDefaultValue: () => 0.2f
+            );
+            var samplesOption = new Option<int>(
+                name: "--samples",
+                description: "Count of generated shapes.",
+                getDefaultValue: () => 50
+            );
+            var mutationsOption = new Option<int>(
+                name: "--mutations",
+                description: "Count of generated shapes.",
+                getDefaultValue: () => 10
+            );
+            var generationsOption = new Option<int>(
+                name: "--generations",
+                description: "Count of generated shapes.",
+                getDefaultValue: () => 50
+            );
 
             var root = new RootCommand("Translate raster image into .svg alterantive.");
             root.AddArgument(fileArgument);
             root.AddOption(shapesCountOption);
-            root.SetHandler(AssignParameters, fileArgument, shapesCountOption);
+            root.AddOption(scaleOption);
+            root.AddOption(samplesOption);
+            root.AddOption(mutationsOption);
+            root.AddOption(generationsOption);
+            root.SetHandler(
+                AssignParameters,
+                fileArgument,
+                shapesCountOption,
+                scaleOption,
+                samplesOption,
+                mutationsOption,
+                generationsOption
+            );
             return root.Invoke(args);
         }
 
-        private void AssignParameters(FileInfo file, int count)
+        private void AssignParameters(
+            FileInfo file,
+            int count,
+            float scale,
+            int samples,
+            int mutations,
+            int generations
+        )
         {
             string path = Path.Combine(LoadFolder.FullName, file.Name);
             LoadFile = new FileInfo(path);
             ShapesCount = count;
+            Scale = scale;
+            Samples = samples;
+            Mutations = mutations;
+            Generations = generations;
         }
     }
 }
