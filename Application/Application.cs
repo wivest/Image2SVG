@@ -44,22 +44,22 @@ namespace Image2SVG.Application
             );
             var scaleOption = new Option<float>(
                 name: "--scale",
-                description: "Count of generated shapes.",
+                description: "New scale of image.",
                 getDefaultValue: () => 0.2f
             );
             var samplesOption = new Option<int>(
                 name: "--samples",
-                description: "Count of generated shapes.",
+                description: "Generated shape samples.",
                 getDefaultValue: () => 50
             );
             var mutationsOption = new Option<int>(
                 name: "--mutations",
-                description: "Count of generated shapes.",
+                description: "Mutations per shape.",
                 getDefaultValue: () => 10
             );
             var generationsOption = new Option<int>(
                 name: "--generations",
-                description: "Count of generated shapes.",
+                description: "Number of generations.",
                 getDefaultValue: () => 50
             );
 
