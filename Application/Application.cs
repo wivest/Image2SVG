@@ -7,7 +7,7 @@ namespace Image2SVG.Application
         private const string IMAGES_DIRECTORY = "images";
         private const string SAVE_DIRECTORY = "result";
 
-        public DirectoryInfo LoadFolder { get; protected set; }
+        public DirectoryInfo LoadFolder { get; protected set; } = new(IMAGES_DIRECTORY);
         public DirectoryInfo SaveFolder { get; protected set; }
 
         public FileInfo? LoadFile { get; protected set; }
@@ -19,7 +19,6 @@ namespace Image2SVG.Application
 
         public Application()
         {
-            LoadFolder = new(IMAGES_DIRECTORY);
             LoadFolder.Create();
             SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
         }
@@ -28,15 +27,18 @@ namespace Image2SVG.Application
         {
             var fileArgument = new Argument<FileInfo>(
                 name: "file",
-                description: "Load specified file."
+                description: "Load specified file.",
+                parse: result =>
+                {
+                    string filename = result.Tokens.Single().Value;
+                    string path = Path.Combine(LoadFolder.FullName, filename);
+                    var file = new FileInfo(path);
+
+                    if (!file.Exists)
+                        result.ErrorMessage = "File doesn't exist.";
+                    return file;
+                }
             );
-            fileArgument.AddValidator(result =>
-            {
-                FileInfo single = result.GetValueForArgument(fileArgument);
-                var file = new FileInfo(GetFilePath(single.Name));
-                if (!file.Exists)
-                    result.ErrorMessage = "File doesn't exist.";
-            });
             var shapesCountOption = new Option<int>(
                 name: "--count",
                 description: "Count of generated shapes.",
@@ -91,17 +93,12 @@ namespace Image2SVG.Application
             int generations
         )
         {
-            LoadFile = new FileInfo(GetFilePath(file.Name));
+            LoadFile = file;
             ShapesCount = count;
             Scale = scale;
             Samples = samples;
             Mutations = mutations;
             Generations = generations;
-        }
-
-        private string GetFilePath(string filename)
-        {
-            return Path.Combine(LoadFolder.FullName, filename);
         }
     }
 }
