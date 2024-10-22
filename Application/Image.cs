@@ -27,13 +27,6 @@ namespace Image2SVG.Application
 
         public void SaveTo(DirectoryInfo directory, string filename)
         {
-            SKImage generatedImage = generated.Snapshot();
-            using var pngStream = new FileStream(
-                $"{directory.FullName}/{filename}.png",
-                FileMode.Create
-            );
-            generatedImage.Encode().SaveTo(pngStream);
-
             var svg = new XmlDocument();
             XmlElement root = svg.CreateElement("svg");
             root.SetAttribute("width", $"{generator.Info.Width}");
