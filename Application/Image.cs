@@ -25,17 +25,6 @@ namespace Image2SVG.Application
             generator = new Generator<T>(size, source, generated);
         }
 
-        public static SKImageInfo ScaleSize(SKImageInfo size, float scale)
-        {
-            return size.WithSize((int)(size.Width * scale), (int)(size.Height * scale));
-        }
-
-        public void Resize(SKBitmap bitmap, SKImageInfo size)
-        {
-            bitmap = bitmap.Resize(size, SKFilterQuality.High);
-            source.Canvas.DrawBitmap(bitmap, 0, 0);
-        }
-
         public void SaveTo(DirectoryInfo directory, string filename)
         {
             SKImage generatedImage = generated.Snapshot();
@@ -85,6 +74,17 @@ namespace Image2SVG.Application
                 Console.Write($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
             ClearLine();
+        }
+
+        private static SKImageInfo ScaleSize(SKImageInfo size, float scale)
+        {
+            return size.WithSize((int)(size.Width * scale), (int)(size.Height * scale));
+        }
+
+        private void Resize(SKBitmap bitmap, SKImageInfo size)
+        {
+            bitmap = bitmap.Resize(size, SKFilterQuality.High);
+            source.Canvas.DrawBitmap(bitmap, 0, 0);
         }
 
         private int GetDegreeOfDetail()
