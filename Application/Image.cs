@@ -16,21 +16,22 @@ namespace Image2SVG.Application
         public Image(FileInfo fileInfo, float scale)
         {
             using SKBitmap bitmap = SKBitmap.Decode(fileInfo.FullName);
-            source = SKSurface.Create(bitmap.Info);
-            Resize(bitmap, scale);
+            SKImageInfo size = ScaleSize(bitmap.Info, scale);
+            source = SKSurface.Create(size);
+            Resize(bitmap, size);
 
-            generated = SKSurface.Create(bitmap.Info);
+            generated = SKSurface.Create(size);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
-            generator = new Generator<T>(bitmap.Info, source, generated);
+            generator = new Generator<T>(size, source, generated);
         }
 
-        public void Resize(SKBitmap bitmap, float scale)
+        public static SKImageInfo ScaleSize(SKImageInfo size, float scale)
         {
-            var size = bitmap.Info.WithSize(
-                (int)(bitmap.Width * scale),
-                (int)(bitmap.Height * scale)
-            );
+            return size.WithSize((int)(size.Width * scale), (int)(size.Height * scale));
+        }
 
+        public void Resize(SKBitmap bitmap, SKImageInfo size)
+        {
             bitmap = bitmap.Resize(size, SKFilterQuality.High);
             source.Canvas.DrawBitmap(bitmap, 0, 0);
         }
