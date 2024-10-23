@@ -17,14 +17,21 @@ namespace Image2SVG.Application
         public int Mutations { get; protected set; }
         public int Generations { get; protected set; }
 
+        private readonly bool firstInitialization = false;
+
         public Application()
         {
+            if (!LoadFolder.Exists)
+                firstInitialization = true;
             LoadFolder.Create();
             SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
         }
 
         public int InvokeRootCommand(string[] args)
         {
+            if (args.Length == 0 && firstInitialization)
+                return 1;
+
             var fileArgument = new Argument<FileInfo>(
                 name: "file",
                 description: "Load specified file.",
