@@ -11,7 +11,7 @@ namespace Image2SVG.Application
         private readonly SKSurface generated;
         private readonly Generator<T> generator;
 
-        private List<T> shapes = new();
+        private readonly List<T> shapes = new();
 
         public Image(FileInfo fileInfo, float scale)
         {

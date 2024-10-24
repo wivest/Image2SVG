@@ -4,7 +4,7 @@ namespace Image2SVG.Application
 {
     class Precalculated
     {
-        public long[,] Data;
+        public readonly long[,] Data;
 
         public Precalculated(SKImageInfo info)
         {
