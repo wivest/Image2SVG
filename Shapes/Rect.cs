@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace Image2SVG.Shapes
 {
-    class Rect : IShape<Rect>
+    class Rect : IShape
     {
         private SKPoint center = new();
         private SKSize size = new();
@@ -47,7 +47,7 @@ namespace Image2SVG.Shapes
             size.Height = (float)random.NextDouble() * area.Height;
         }
 
-        public Rect Mutate(float percentage)
+        public IShape Mutate(float percentage)
         {
             var clone = new Rect
             {

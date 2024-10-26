@@ -3,8 +3,7 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Generator<T>
-        where T : IShape<T>, new()
+    class Generator
     {
         public float BlurValue = 1;
 
@@ -16,7 +15,7 @@ namespace Image2SVG.Application
         public readonly Precalculated ImageDifference;
         public readonly AverageColor BaseColor;
 
-        public readonly ShapeGenerator<T> Shapes;
+        public readonly ShapeGenerator<Rect> Shapes;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -34,22 +33,22 @@ namespace Image2SVG.Application
             BaseColor = new AverageColor(info, source);
         }
 
-        public T EvolveShapes(int samples, int mutations, int generations, int splits)
+        public IShape EvolveShapes(int samples, int mutations, int generations, int splits)
         {
             PrecalculateDifference();
             SKRectI area = GetWorstArea(splits, splits);
 
-            var shapes = new List<T>();
+            var shapes = new List<IShape>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                T shape = Shapes.GenerateShape(area);
+                IShape shape = Shapes.GenerateShape(area);
                 shape.Color = BaseColor
                     .GetAverageColor(shape.ImageBounds)
                     .WithAlpha(Shapes.Opacity);
                 shapes.Add(shape);
             }
 
-            var rank = new Rank<T>(this);
+            var rank = new Rank(this);
             rank.RankShapes(shapes);
             rank.Ranked.RemoveRange(samples, rank.Ranked.Count - samples);
 

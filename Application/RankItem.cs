@@ -2,19 +2,18 @@ using Image2SVG.Shapes;
 
 namespace Image2SVG.Application
 {
-    class RankItem<T> : IComparable<RankItem<T>>
-        where T : IShape<T>
+    class RankItem : IComparable<RankItem>
     {
-        public T Shape;
+        public IShape Shape;
         public long Difference;
 
-        public RankItem(T shape, long difference)
+        public RankItem(IShape shape, long difference)
         {
             Shape = shape;
             Difference = difference;
         }
 
-        public int CompareTo(RankItem<T>? other)
+        public int CompareTo(RankItem? other)
         {
             if (other == null)
                 return 0;

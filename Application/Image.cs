@@ -4,14 +4,13 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Image<T>
-        where T : IShape<T>, new()
+    class Image
     {
         private readonly SKSurface source;
         private readonly SKSurface generated;
-        private readonly Generator<T> generator;
+        private readonly Generator generator;
 
-        private readonly List<T> shapes = new();
+        private readonly List<IShape> shapes = new();
 
         public Image(FileInfo fileInfo, float scale)
         {
@@ -22,7 +21,7 @@ namespace Image2SVG.Application
 
             generated = SKSurface.Create(size);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
-            generator = new Generator<T>(size, source, generated);
+            generator = new Generator(size, source, generated);
         }
 
         public void SaveTo(DirectoryInfo directory, string filename)
@@ -34,7 +33,7 @@ namespace Image2SVG.Application
             root.SetAttribute("style", "background-color:white");
             svg.AppendChild(root);
 
-            foreach (T shape in shapes)
+            foreach (IShape shape in shapes)
             {
                 root.AppendChild(shape.ToSVG(svg));
             }
@@ -53,7 +52,7 @@ namespace Image2SVG.Application
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                T shape = generator.EvolveShapes(
+                IShape shape = generator.EvolveShapes(
                     samples,
                     mutations,
                     generations,

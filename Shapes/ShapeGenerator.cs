@@ -3,7 +3,7 @@ using SkiaSharp;
 namespace Image2SVG.Shapes
 {
     class ShapeGenerator<T>
-        where T : IShape<T>, new()
+        where T : IShape, new()
     {
         public byte Opacity = 128;
 

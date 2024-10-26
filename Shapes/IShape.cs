@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace Image2SVG.Shapes
 {
-    interface IShape<T>
+    interface IShape
     {
         public SKColor Color { get; set; }
 
@@ -24,7 +24,7 @@ namespace Image2SVG.Shapes
 
         public void Draw(SKCanvas canvas);
         public void RandomizeParameters(SKRect area);
-        public T Mutate(float percentage);
+        public IShape Mutate(float percentage);
         public XmlElement ToSVG(XmlDocument root);
     }
 }

@@ -3,19 +3,18 @@ using SkiaSharp;
 
 namespace Image2SVG.Application
 {
-    class Rank<T>
-        where T : IShape<T>, new()
+    class Rank
     {
-        public List<RankItem<T>> Ranked = new();
+        public List<RankItem> Ranked = new();
 
-        private Generator<T> generator;
+        private Generator generator;
 
-        public Rank(Generator<T> generator)
+        public Rank(Generator generator)
         {
             this.generator = generator;
         }
 
-        public void RankShapes(List<T> shapes)
+        public void RankShapes(List<IShape> shapes)
         {
             Ranked.EnsureCapacity(Ranked.Count + shapes.Count);
 
@@ -31,7 +30,7 @@ namespace Image2SVG.Application
                     currentGeneratedCopy.Canvas.DrawSurface(generator.Generated, 0, 0);
                     shape.Draw(currentGeneratedCopy.Canvas);
                     long difference = CalculateDifference(currentGeneratedCopy, shape.ImageBounds);
-                    var item = new RankItem<T>(shape, difference - currentDifference);
+                    var item = new RankItem(shape, difference - currentDifference);
                     Ranked.Add(item);
                 }
             );
@@ -39,17 +38,17 @@ namespace Image2SVG.Application
             Ranked.Sort();
         }
 
-        public List<T> MutateShapes(int mutations)
+        public List<IShape> MutateShapes(int mutations)
         {
-            var shapes = new List<T>();
+            var shapes = new List<IShape>();
 
             foreach (var item in Ranked)
             {
-                T shape = item.Shape;
+                IShape shape = item.Shape;
                 shapes.Add(shape);
                 for (int i = 0; i < mutations; i++)
                 {
-                    T mutatedShape = shape.Mutate(0.5f);
+                    IShape mutatedShape = shape.Mutate(0.5f);
                     mutatedShape.Color = generator
                         .BaseColor.GetAverageColor(mutatedShape.ImageBounds)
                         .WithAlpha(generator.Shapes.Opacity);

@@ -11,7 +11,7 @@ if (application.InvokeRootCommand(args) != 0)
 if (application.LoadFile == null)
     return 1;
 
-var image = new Image<Rect>(application.LoadFile, application.Scale);
+var image = new Image(application.LoadFile, application.Scale);
 image.Generate(
     application.ShapesCount,
     application.Samples,
