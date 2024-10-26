@@ -43,6 +43,8 @@ namespace Image2SVG.Application
                 FileMode.Create
             );
             svg.Save(stream);
+
+            Console.WriteLine($"Saved to {stream.Name}.");
         }
 
         public void Generate(int numberOfShapes, int samples, int mutations, int generations)
