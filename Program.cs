@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Image2SVG.Application;
-using Image2SVG.Shapes;
 
 Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
