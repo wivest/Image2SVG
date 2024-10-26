@@ -5,10 +5,10 @@ namespace Image2SVG.Application
     class Application
     {
         private const string IMAGES_DIRECTORY = "images";
-        private const string SAVE_DIRECTORY = "result";
+        private const string SAVE_DIRECTORY = "results";
 
         public DirectoryInfo LoadFolder { get; protected set; } = new(IMAGES_DIRECTORY);
-        public DirectoryInfo SaveFolder { get; protected set; }
+        public DirectoryInfo SaveFolder { get; protected set; } = new(SAVE_DIRECTORY);
 
         public FileInfo? LoadFile { get; protected set; }
         public int ShapesCount { get; protected set; }
@@ -21,10 +21,10 @@ namespace Image2SVG.Application
 
         public Application()
         {
-            if (!LoadFolder.Exists)
+            if (!LoadFolder.Exists || !SaveFolder.Exists)
                 firstInitialization = true;
             LoadFolder.Create();
-            SaveFolder = LoadFolder.CreateSubdirectory(SAVE_DIRECTORY);
+            SaveFolder.Create();
         }
 
         public int InvokeRootCommand(string[] args)
