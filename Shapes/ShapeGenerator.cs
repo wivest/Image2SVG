@@ -6,6 +6,7 @@ namespace Image2SVG.Shapes
         where T : IShape, new()
     {
         public byte Opacity = 128;
+        public float MutationRange = 0.5f;
 
         private SKImageInfo info;
 
