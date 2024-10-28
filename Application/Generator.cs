@@ -15,7 +15,7 @@ namespace Image2SVG.Application
         public readonly Precalculated ImageDifference;
         public readonly AverageColor BaseColor;
 
-        public readonly ShapeGenerator<Rect> Shapes;
+        public readonly ShapeGenerator<Rect> Rects;
 
         public Generator(SKImageInfo info, SKSurface source, SKSurface generated)
         {
@@ -23,7 +23,7 @@ namespace Image2SVG.Application
             Source = source;
             Generated = generated;
 
-            Shapes = new(info);
+            Rects = new(info);
 
             ImageDifference = new Precalculated(info);
             BlurrySource = SKSurface.Create(info);
@@ -41,10 +41,8 @@ namespace Image2SVG.Application
             var shapes = new List<IShape>();
             for (int i = 0; i < samples * mutations; i++)
             {
-                IShape shape = Shapes.GenerateShape(area);
-                shape.Color = BaseColor
-                    .GetAverageColor(shape.ImageBounds)
-                    .WithAlpha(Shapes.Opacity);
+                IShape shape = Rects.GenerateShape(area);
+                shape.Color = BaseColor.GetAverageColor(shape.ImageBounds).WithAlpha(Rects.Opacity);
                 shapes.Add(shape);
             }
 
