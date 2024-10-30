@@ -1,7 +1,7 @@
 using System.Xml;
 using SkiaSharp;
 
-namespace Image2SVG.Shapes
+namespace Image2SVG.Shapes.Concrete
 {
     class Rect : IShape
     {
