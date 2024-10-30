@@ -1,7 +1,7 @@
-using Image2SVG.Shapes;
+using Image2SVG.Application;
 using SkiaSharp;
 
-namespace Image2SVG.Application
+namespace Image2SVG.Shapes
 {
     class RankItem : IComparable<RankItem>
     {
