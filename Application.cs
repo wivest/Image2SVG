@@ -30,7 +30,10 @@ namespace Image2SVG
         public int InvokeRootCommand(string[] args)
         {
             if (args.Length == 0 && firstInitialization)
+            {
+                Console.WriteLine("Folders initialized.");
                 return 1;
+            }
 
             var fileArgument = new Argument<FileInfo>(
                 name: "file",
