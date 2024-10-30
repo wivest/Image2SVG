@@ -2,7 +2,7 @@ using Image2SVG.Shapes;
 using Image2SVG.Shapes.Concrete;
 using SkiaSharp;
 
-namespace Image2SVG.Application
+namespace Image2SVG.Model
 {
     class Generator
     {

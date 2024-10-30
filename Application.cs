@@ -1,6 +1,6 @@
 using System.CommandLine;
 
-namespace Image2SVG.Application
+namespace Image2SVG
 {
     class Application
     {

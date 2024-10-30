@@ -1,4 +1,4 @@
-using Image2SVG.Application;
+using Image2SVG.Model;
 
 namespace Image2SVG.Shapes
 {

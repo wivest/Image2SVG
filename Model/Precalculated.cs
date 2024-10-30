@@ -1,6 +1,6 @@
 using SkiaSharp;
 
-namespace Image2SVG.Application
+namespace Image2SVG.Model
 {
     class Precalculated
     {
