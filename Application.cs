@@ -17,23 +17,10 @@ namespace Image2SVG
         public int Mutations { get; protected set; }
         public int Generations { get; protected set; }
 
-        private readonly bool firstInitialization = false;
-
-        public Application()
-        {
-            if (!LoadFolder.Exists || !SaveFolder.Exists)
-                firstInitialization = true;
-            LoadFolder.Create();
-            SaveFolder.Create();
-        }
-
         public int InvokeRootCommand(string[] args)
         {
-            if (args.Length == 0 && firstInitialization)
-            {
-                Console.WriteLine("Folders initialized.");
-                return 1;
-            }
+            var initCommand = new Command("init", "Initialize image folders.");
+            initCommand.SetHandler(() => InitializeFolders());
 
             var fileArgument = new Argument<FileInfo>(
                 name: "file",
@@ -76,12 +63,16 @@ namespace Image2SVG
             );
 
             var root = new RootCommand("Translate raster image into .svg alterantive.");
+
+            root.AddCommand(initCommand);
+
             root.AddArgument(fileArgument);
             root.AddOption(shapesCountOption);
             root.AddOption(scaleOption);
             root.AddOption(samplesOption);
             root.AddOption(mutationsOption);
             root.AddOption(generationsOption);
+
             root.SetHandler(
                 AssignParameters,
                 fileArgument,
@@ -91,7 +82,15 @@ namespace Image2SVG
                 mutationsOption,
                 generationsOption
             );
+
             return root.Invoke(args);
+        }
+
+        private void InitializeFolders()
+        {
+            LoadFolder.Create();
+            SaveFolder.Create();
+            Console.WriteLine("Image folders were initialized.");
         }
 
         private void AssignParameters(
