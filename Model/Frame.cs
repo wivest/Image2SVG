@@ -23,12 +23,12 @@ namespace Image2SVG.Model
 
         public void Serialize(Stream pipe)
         {
-            throw new NotImplementedException();
+            pipe.Write(source.Bytes);
         }
 
-        public Task SerializeAsync(Stream pipe, CancellationToken token)
+        public async Task SerializeAsync(Stream pipe, CancellationToken token)
         {
-            throw new NotImplementedException();
+            await pipe.WriteAsync(source.Bytes, token);
         }
     }
 }
