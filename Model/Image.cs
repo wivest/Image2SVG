@@ -8,9 +8,10 @@ namespace Image2SVG.Model
     {
         private readonly SKSurface source;
         private readonly SKSurface generated;
-        private readonly Generator generator;
-
         private readonly List<IShape> shapes = new();
+
+        private readonly Generator generator;
+        private readonly Animator animator;
 
         public Image(FileInfo fileInfo, float scale)
         {
