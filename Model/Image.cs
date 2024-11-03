@@ -17,12 +17,14 @@ namespace Image2SVG.Model
         {
             using SKBitmap bitmap = SKBitmap.Decode(fileInfo.FullName);
             SKImageInfo size = ScaleSize(bitmap.Info, scale);
+
             source = SKSurface.Create(size);
             Resize(bitmap, size);
-
             generated = SKSurface.Create(size);
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
+
             generator = new Generator(size, source, generated);
+            animator = new Animator { frameRate = 24 };
         }
 
         public void SaveTo(DirectoryInfo directory, string filename)
