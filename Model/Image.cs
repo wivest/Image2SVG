@@ -24,7 +24,7 @@ namespace Image2SVG.Model
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
 
             generator = new Generator(size, source, generated);
-            animator = new Animator { frameRate = 24 };
+            animator = new Animator { FrameRate = 24 };
         }
 
         public void SaveTo(DirectoryInfo directory, string filename)
