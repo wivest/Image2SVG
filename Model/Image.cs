@@ -70,6 +70,9 @@ namespace Image2SVG.Model
                 shapes.Add(shape);
 
                 stopwatch.Stop();
+
+                animator.AddFrame(SKBitmap.FromImage(generated.Snapshot()));
+
                 ClearLine();
                 Console.Write($"Shape {i + 1}: {stopwatch.ElapsedMilliseconds} ms");
             }
