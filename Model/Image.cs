@@ -48,6 +48,9 @@ namespace Image2SVG.Model
             svg.Save(stream);
 
             Console.WriteLine($"Saved to {stream.Name}.");
+
+            if (animator.SaveTo(directory, filename))
+                Console.WriteLine("Video saved successfully.");
         }
 
         public void Generate(int numberOfShapes, int samples, int mutations, int generations)

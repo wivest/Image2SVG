@@ -10,12 +10,12 @@ namespace Image2SVG.Model
 
         private readonly List<Frame> frames = new();
 
-        public void SaveTo(DirectoryInfo directory, string filename)
+        public bool SaveTo(DirectoryInfo directory, string filename)
         {
             string path = $"{directory.FullName}/{filename}.webm";
 
             var videoSource = new RawVideoPipeSource(frames) { FrameRate = FrameRate };
-            bool _ = FFMpegArguments
+            return FFMpegArguments
                 .FromPipeInput(videoSource)
                 .OutputToFile(path, addArguments: options => options.WithVideoCodec("libvpx-vp9"))
                 .ProcessSynchronously();
