@@ -11,11 +11,14 @@ namespace Image2SVG
         public DirectoryInfo SaveFolder { get; protected set; } = new(SAVE_DIRECTORY);
 
         public FileInfo? LoadFile { get; protected set; }
+
         public int ShapesCount { get; protected set; }
         public float Scale { get; protected set; }
         public int Samples { get; protected set; }
         public int Mutations { get; protected set; }
         public int Generations { get; protected set; }
+
+        public int Frames { get; protected set; }
 
         public int InvokeRootCommand(string[] args)
         {
@@ -61,17 +64,25 @@ namespace Image2SVG
                 description: "Number of generations.",
                 getDefaultValue: () => 50
             );
+            var framesOption = new Option<int>(
+                name: "--frames",
+                description: "Frame rate in animation (0 is no animation).",
+                getDefaultValue: () => 0
+            );
 
             var root = new RootCommand("Translate raster image into .svg alterantive.");
 
             root.AddCommand(initCommand);
 
             root.AddArgument(fileArgument);
+
             root.AddOption(shapesCountOption);
             root.AddOption(scaleOption);
             root.AddOption(samplesOption);
             root.AddOption(mutationsOption);
             root.AddOption(generationsOption);
+
+            root.AddOption(framesOption);
 
             root.SetHandler(
                 AssignParameters,
@@ -80,7 +91,8 @@ namespace Image2SVG
                 scaleOption,
                 samplesOption,
                 mutationsOption,
-                generationsOption
+                generationsOption,
+                framesOption
             );
 
             return root.Invoke(args);
@@ -99,7 +111,8 @@ namespace Image2SVG
             float scale,
             int samples,
             int mutations,
-            int generations
+            int generations,
+            int frames
         )
         {
             LoadFile = file;
@@ -108,6 +121,7 @@ namespace Image2SVG
             Samples = samples;
             Mutations = mutations;
             Generations = generations;
+            Frames = frames;
         }
     }
 }

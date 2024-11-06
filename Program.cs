@@ -18,6 +18,6 @@ image.Generate(
     application.Mutations,
     application.Generations
 );
-image.SaveTo(application.SaveFolder, application.LoadFile.Name);
+image.SaveTo(application.SaveFolder, application.LoadFile.Name, application.Frames);
 
 return 0;

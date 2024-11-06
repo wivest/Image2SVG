@@ -27,7 +27,7 @@ namespace Image2SVG.Model
             animator = new Animator { FrameRate = 24 };
         }
 
-        public void SaveTo(DirectoryInfo directory, string filename)
+        public void SaveTo(DirectoryInfo directory, string filename, int frames)
         {
             var svg = new XmlDocument();
             XmlElement root = svg.CreateElement("svg");
@@ -49,8 +49,9 @@ namespace Image2SVG.Model
 
             Console.WriteLine($"Saved to {stream.Name}.");
 
-            if (animator.SaveTo(directory, filename))
-                Console.WriteLine("Video saved successfully.");
+            if (frames > 0)
+                if (animator.SaveTo(directory, filename))
+                    Console.WriteLine("Video saved successfully.");
         }
 
         public void Generate(int numberOfShapes, int samples, int mutations, int generations)
