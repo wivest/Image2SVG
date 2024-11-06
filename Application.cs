@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Text;
 
 namespace Image2SVG
 {
@@ -109,7 +110,12 @@ namespace Image2SVG
         {
             LoadFolder.Create();
             SaveFolder.Create();
-            ExecFile.Create();
+
+            ExecFile.Delete();
+            using FileStream stream = ExecFile.Create();
+            byte[] buffer = new UTF8Encoding(true).GetBytes(binaryLocation.ToString());
+            stream.Write(buffer);
+
             Console.WriteLine("Image folders were initialized.");
         }
 
