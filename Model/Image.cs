@@ -24,7 +24,7 @@ namespace Image2SVG.Model
             generated.Canvas.DrawPaint(new SKPaint { Color = SKColors.White });
 
             generator = new Generator(size, source, generated);
-            animator = new Animator { FrameRate = 24 };
+            animator = new Animator();
         }
 
         public void SaveTo(DirectoryInfo directory, string filename, int frames)
@@ -50,8 +50,11 @@ namespace Image2SVG.Model
             Console.WriteLine($"Saved to {stream.Name}.");
 
             if (frames > 0)
+            {
+                animator.FrameRate = frames;
                 if (animator.SaveTo(directory, filename))
                     Console.WriteLine("Video saved successfully.");
+            }
         }
 
         public void Generate(int numberOfShapes, int samples, int mutations, int generations)
