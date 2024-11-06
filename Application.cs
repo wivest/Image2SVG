@@ -25,7 +25,12 @@ namespace Image2SVG
         public int InvokeRootCommand(string[] args)
         {
             var initCommand = new Command("init", "Initialize image folders.");
-            initCommand.SetHandler(() => InitializeFolders());
+            var locationArgument = new Argument<DirectoryInfo>(
+                name: "location",
+                description: "Location of binary FFMPEG."
+            );
+            initCommand.AddArgument(locationArgument);
+            initCommand.SetHandler((location) => InitializeFolders(location), locationArgument);
 
             var fileArgument = new Argument<FileInfo>(
                 name: "file",
@@ -100,7 +105,7 @@ namespace Image2SVG
             return root.Invoke(args);
         }
 
-        private void InitializeFolders()
+        private void InitializeFolders(DirectoryInfo binaryLocation)
         {
             LoadFolder.Create();
             SaveFolder.Create();
