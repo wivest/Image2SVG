@@ -6,6 +6,8 @@ namespace Image2SVG
     {
         private const string IMAGES_DIRECTORY = "images";
         private const string SAVE_DIRECTORY = "results";
+        private const string FFMPEG_FILE = "ffmpeg.txt";
+        private FileInfo ExecFile = new(FFMPEG_FILE);
 
         public DirectoryInfo LoadFolder { get; protected set; } = new(IMAGES_DIRECTORY);
         public DirectoryInfo SaveFolder { get; protected set; } = new(SAVE_DIRECTORY);
@@ -102,6 +104,7 @@ namespace Image2SVG
         {
             LoadFolder.Create();
             SaveFolder.Create();
+            ExecFile.Create();
             Console.WriteLine("Image folders were initialized.");
         }
 
