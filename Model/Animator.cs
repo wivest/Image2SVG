@@ -6,16 +6,14 @@ namespace Image2SVG.Model
 {
     class Animator
     {
-        private const string FFMPEG_PATH = @"";
-
         public int FrameRate { get; set; }
 
         private readonly List<Frame> frames = new();
 
-        public Animator()
+        public static void SetPath(string executable)
         {
             string? path = Environment.GetEnvironmentVariable("PATH");
-            Environment.SetEnvironmentVariable("PATH", $"{path};{FFMPEG_PATH}");
+            Environment.SetEnvironmentVariable("PATH", $"{path};{executable}");
         }
 
         public bool SaveTo(DirectoryInfo directory, string filename)
