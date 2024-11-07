@@ -8,7 +8,18 @@ namespace Image2SVG
         private const string IMAGES_DIRECTORY = "images";
         private const string SAVE_DIRECTORY = "results";
         private const string FFMPEG_FILE = "ffmpeg.txt";
-        private FileInfo ExecFile = new(FFMPEG_FILE);
+        private FileInfo BinaryFile { get; set; } = new(FFMPEG_FILE);
+
+        public string BinaryLocation
+        {
+            get
+            {
+                using FileStream stream = BinaryFile.OpenRead();
+                var buffer = new byte[stream.Length];
+                int _ = stream.Read(buffer);
+                return Encoding.UTF8.GetString(buffer);
+            }
+        }
 
         public DirectoryInfo LoadFolder { get; protected set; } = new(IMAGES_DIRECTORY);
         public DirectoryInfo SaveFolder { get; protected set; } = new(SAVE_DIRECTORY);
@@ -111,9 +122,9 @@ namespace Image2SVG
             LoadFolder.Create();
             SaveFolder.Create();
 
-            ExecFile.Delete();
-            using FileStream stream = ExecFile.Create();
-            byte[] buffer = new UTF8Encoding(true).GetBytes(binaryLocation.ToString());
+            BinaryFile.Delete();
+            using FileStream stream = BinaryFile.Create();
+            byte[] buffer = new UTF8Encoding(true).GetBytes(binaryLocation.FullName);
             stream.Write(buffer);
 
             Console.WriteLine("Image folders were initialized.");
