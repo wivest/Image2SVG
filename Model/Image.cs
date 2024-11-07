@@ -54,7 +54,7 @@ namespace Image2SVG.Model
                 Animator.SetPath(binary);
                 animator.FrameRate = frames;
                 if (animator.SaveTo(directory, filename))
-                    Console.WriteLine("Video saved successfully.");
+                    Console.WriteLine($"Video saved to {directory.FullName}/{filename}.webm.");
             }
         }
 
