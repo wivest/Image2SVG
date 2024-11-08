@@ -2,8 +2,6 @@
 using Image2SVG;
 using Image2SVG.Model;
 
-Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-
 var application = new Application();
 
 if (application.InvokeRootCommand(args) != 0)

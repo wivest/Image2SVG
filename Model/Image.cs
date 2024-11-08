@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml;
 using Image2SVG.Shapes;
 using SkiaSharp;
@@ -29,6 +30,9 @@ namespace Image2SVG.Model
 
         public void SaveTo(DirectoryInfo directory, string filename, int frames, string binary)
         {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+
             var svg = new XmlDocument();
             XmlElement root = svg.CreateElement("svg");
             root.SetAttribute("width", $"{generator.Info.Width}");
@@ -40,6 +44,8 @@ namespace Image2SVG.Model
             {
                 root.AppendChild(shape.ToSVG(svg));
             }
+
+            Thread.CurrentThread.CurrentCulture = currentCulture;
 
             using var stream = new FileStream(
                 $"{directory.FullName}/{filename}.svg",
