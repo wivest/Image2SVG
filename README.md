@@ -2,6 +2,14 @@
 
 Convert raster images to geometrical primitives. Implemented using C# and [**Skia Sharp**](https://github.com/mono/SkiaSharp).
 
+### Original
+
+![Original image](readme/image.png)
+
+### Recreated with 2000 shapes
+
+![Image recreated with 2000 shapes](readme/wheelerwalkerjr.svg)
+
 ## Features
 
 -   Set number of generated shapes
