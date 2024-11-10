@@ -20,3 +20,13 @@ Convert raster images to geometrical primitives. Implemented using C# and [**Ski
     -   Number of generations
 -   Save as `.svg` file
 -   Save generation progress as `.webm` file
+
+## Getting started
+
+### Prerequisites
+
+The project is written in **C#**, so [.NET 6.0 or higher](https://dotnet.microsoft.com/en-us/download) is needed. Some third-party packages are used, that can be downloaded with the following command:
+
+```
+dotnet restore
+```
