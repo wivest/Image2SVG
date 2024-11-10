@@ -30,3 +30,14 @@ The project is written in **C#**, so [.NET 6.0 or higher](https://dotnet.microso
 ```
 dotnet restore
 ```
+
+#### FFMPEG
+
+To save `.webm` animations _FFMPEG binary_ is required. It can be found [here](https://ffmpeg.org/download.html). Then place binary in any folder you want and copy its path. Run the `init` command using the copied path:
+
+```
+dotnet run init <path>
+```
+
+> [!NOTE]
+> If you aren't going to generate animations, instead type anything into _path_.
