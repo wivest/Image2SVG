@@ -41,3 +41,18 @@ dotnet run init <path>
 
 > [!NOTE]
 > If you aren't going to generate animations, instead type anything into _path_.
+
+### Run the project
+
+After initialization there are two folders: `/images` and `/results`. All images that are saved in the first folder are visible to the program. Second one contains generated `.svg`s and `.webm` animations.
+
+> [!IMPORTANT]
+> Results with the same name will be overwritten!
+
+The signature of running command is following:
+
+```
+dotnet run <filename> [options]
+```
+
+Where _filename_ is the name of file, saved in `/images` folder.
