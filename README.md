@@ -8,7 +8,7 @@ Convert raster images to geometrical primitives. Implemented using C# and [**Ski
 
 ### Recreated with 2000 shapes
 
-![Image recreated with 2000 shapes](readme/wheelerwalkerjr.svg)
+![Image recreated with 2000 shapes](readme/wheelerwalkerjr.gif)
 
 ## Features
 
