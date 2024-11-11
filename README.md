@@ -56,3 +56,20 @@ dotnet run <filename> [options]
 ```
 
 Where _filename_ is the name of file, saved in `/images` folder.
+
+#### Options
+
+To invoke _help page_ (and see default values) run:
+
+```
+dotnet run -- -h
+```
+
+| Option          | Description                                  |
+| --------------- | -------------------------------------------- |
+| `--count`       | Count of generated shapes.                   |
+| `--scale`       | Rescale factor of image.                     |
+| `--samples`     | Generated shape samples on start.            |
+| `--mutations`   | Mutations per generation.                    |
+| `--generations` | Number of generations.                       |
+| `--frames`      | Frame rate in animation (0 is no animation). |
